@@ -38,7 +38,7 @@ jobs:
 
       - name: Compile backend
         working-directory: backend
-        run: ./mvnw -B compile
+        run: sh ./mvnw -B compile
 
   build:
     name: Build artifacts
@@ -71,7 +71,7 @@ jobs:
 
       - name: Build backend (package jar)
         working-directory: backend
-        run: ./mvnw -B -DskipTests package
+        run: sh ./mvnw -B -DskipTests package
 
       - name: Zip frontend build
         working-directory: frontend/out
