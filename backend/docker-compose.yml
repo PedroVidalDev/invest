@@ -17,6 +17,23 @@ services:
     networks:
       - springboot-network
 
+  api:
+    build: .
+    container_name: invest_api
+
+    env_file:
+      - .env.docker
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    networks:
+      - springboot-network
+
 volumes:
   postgres_data:
 
