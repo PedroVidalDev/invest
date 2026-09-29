@@ -1,4 +1,4 @@
-package com.backend.invest.operation.enums;
+package com.backend.invest.operation.domain;
 
 public enum OperationType {
     BUY,
