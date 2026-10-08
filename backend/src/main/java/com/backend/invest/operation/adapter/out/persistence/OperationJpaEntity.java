@@ -16,6 +16,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 @Entity(name = "Operation")
 @Table(name = "tb_operations")
 @Getter
@@ -30,6 +33,7 @@ public class OperationJpaEntity {
     private String instrumentId;
 
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private OperationType type;
 
     private Double assetValue;

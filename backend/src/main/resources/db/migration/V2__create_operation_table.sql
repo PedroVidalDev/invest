@@ -1,7 +1,14 @@
+CREATE TYPE OperationType AS ENUM (
+    'BUY',
+    'SELL',
+    'DEPOSIT',
+    'WITHDRAWAL'
+);
+
 CREATE TABLE tb_operations (
     id            VARCHAR(36)       NOT NULL,
     instrument_id VARCHAR(255),
-    type          VARCHAR(32)       NOT NULL,
+    type          OperationType     NOT NULL,
     asset_value   DOUBLE PRECISION,
     quantity      DOUBLE PRECISION,
     annual_rate   INTEGER,
