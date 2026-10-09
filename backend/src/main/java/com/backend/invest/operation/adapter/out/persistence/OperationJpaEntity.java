@@ -1,14 +1,19 @@
 package com.backend.invest.operation.adapter.out.persistence;
 
+import com.backend.invest.instrument.adapter.out.persistence.InstrumentJpaEntity;
 import com.backend.invest.operation.domain.Operation;
 import com.backend.invest.operation.domain.OperationType;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +35,12 @@ public class OperationJpaEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
+    @Column(name = "instrument_id")
     private String instrumentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrument_id", insertable = false, updatable = false)
+    private InstrumentJpaEntity instrument;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
@@ -49,6 +59,7 @@ public class OperationJpaEntity {
         return new OperationJpaEntity(
                 operation.getId(),
                 operation.getInstrumentId(),
+                null,
                 operation.getType(),
                 operation.getAssetValue(),
                 operation.getQuantity(),
