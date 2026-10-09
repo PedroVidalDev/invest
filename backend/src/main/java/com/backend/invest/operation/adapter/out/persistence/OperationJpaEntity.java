@@ -1,0 +1,84 @@
+package com.backend.invest.operation.adapter.out.persistence;
+
+import com.backend.invest.instrument.adapter.out.persistence.InstrumentJpaEntity;
+import com.backend.invest.operation.domain.Operation;
+import com.backend.invest.operation.domain.OperationType;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+@Entity(name = "Operation")
+@Table(name = "tb_operations")
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public class OperationJpaEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+
+    @Column(name = "instrument_id")
+    private String instrumentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instrument_id", insertable = false, updatable = false)
+    private InstrumentJpaEntity instrument;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private OperationType type;
+
+    private Double assetValue;
+    private Double quantity;
+
+    private Integer annualRate;
+
+    private LocalDateTime executedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    public static OperationJpaEntity from(Operation operation) {
+        return new OperationJpaEntity(
+                operation.getId(),
+                operation.getInstrumentId(),
+                null,
+                operation.getType(),
+                operation.getAssetValue(),
+                operation.getQuantity(),
+                operation.getAnnualRate(),
+                operation.getExecutedAt(),
+                operation.getCreatedAt(),
+                operation.getUpdatedAt());
+    }
+
+    public Operation toDomain() {
+        return new Operation(
+                id,
+                instrumentId,
+                type,
+                assetValue,
+                quantity,
+                annualRate,
+                executedAt,
+                createdAt,
+                updatedAt);
+    }
+}
