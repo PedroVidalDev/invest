@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class InstrumentBeanConfig {
-    @Bean
-    public InstrumentService instrumentService(InstrumentRepositoryPort repositoryPort) {
-        return new InstrumentService(repositoryPort);
-    }
+  @Bean
+  public InstrumentService instrumentService(InstrumentRepositoryPort repositoryPort) {
+    return new InstrumentService(repositoryPort);
+  }
 }

@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface OperationRepositoryPort {
-    Operation save(Operation operation);
+  Operation save(Operation operation);
 
-    Optional<Operation> findById(String id);
+  Optional<Operation> findById(String id);
 
-    List<Operation> findAll();
+  List<Operation> findAll();
 }

@@ -14,20 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/instruments")
 public class InstrumentCreateController {
 
-    private final CreateInstrumentUseCase createInstrument;
+  private final CreateInstrumentUseCase createInstrument;
 
-    public InstrumentCreateController(CreateInstrumentUseCase createInstrument) {
-        this.createInstrument = createInstrument;
-    }
+  public InstrumentCreateController(CreateInstrumentUseCase createInstrument) {
+    this.createInstrument = createInstrument;
+  }
 
-    @PostMapping
-    public ResponseEntity<InstrumentResponse> create(
-            @RequestBody CreateInstrumentRequest request
-    ) {
-        return ResponseEntity.ok(
-                InstrumentResponse.from(
-                        createInstrument.create(request.toDomain())
-                )
-        );
-    }
+  @PostMapping
+  public ResponseEntity<InstrumentResponse> create(@RequestBody CreateInstrumentRequest request) {
+    return ResponseEntity.ok(InstrumentResponse.from(createInstrument.create(request.toDomain())));
+  }
 }
