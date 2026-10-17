@@ -16,8 +16,7 @@ import com.backend.invest.binance.domain.port.out.BinanceMarketDataPort;
 public class BinanceRestAdapter implements BinanceMarketDataPort {
   private final RestClient restClient;
 
-  public BinanceRestAdapter(RestClient.Builder builder,
-      @Value("${BINANCE_API}") String baseUrl) {
+  public BinanceRestAdapter(RestClient.Builder builder, @Value("${BINANCE_API}") String baseUrl) {
     this.restClient = builder.baseUrl(baseUrl).build();
   }
 
@@ -36,9 +35,9 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
 
   @Override
   public Optional<CryptoPrice> fetchPriceBySymbol(String symbol) {
-    BinancePriceResponse body = restClient.get()
-        .uri(b -> b.path("/api/v3/ticker").queryParam("symbol", symbol).build()).retrieve()
-        .body(BinancePriceResponse.class);
+    BinancePriceResponse body =
+        restClient.get().uri(b -> b.path("/api/v3/ticker").queryParam("symbol", symbol).build())
+            .retrieve().body(BinancePriceResponse.class);
 
     if (body == null) {
       return Optional.empty();
