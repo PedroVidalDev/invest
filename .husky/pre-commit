@@ -1,7 +1,19 @@
 #!/bin/sh
 set -e
 
-echo "Running Spotless check..."
-cd "$(git rev-parse --show-toplevel)"
-cd backend
-./mvnw spotless:check
+ROOT=$(git rev-parse --show-toplevel)
+STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
+
+JAVA_FILES=$(printf '%s\n' "$STAGED" | grep '^backend/.*\.java$' || true)
+if [ -n "$JAVA_FILES" ]; then
+  echo "Checking staged Java files (Spotless)..."
+  FILES=$(printf '%s\n' "$JAVA_FILES" | sed 's#^backend/##' | paste -sd, -)
+  (cd "$ROOT/backend" && ./mvnw -q spotless:check -DspotlessFiles="$FILES")
+fi
+
+WEB_FILES=$(printf '%s\n' "$STAGED" | grep -E '^frontend/.*\.(js|jsx|ts|tsx|mjs)$' || true)
+if [ -n "$WEB_FILES" ]; then
+  echo "Checking staged frontend files (ESLint/Prettier)..."
+  FILES=$(printf '%s\n' "$WEB_FILES" | sed 's#^frontend/##')
+  (cd "$ROOT/frontend" && npx eslint --max-warnings=0 $FILES)
+fi
