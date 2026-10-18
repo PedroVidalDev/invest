@@ -4,21 +4,26 @@ set -e
 ROOT=$(git rev-parse --show-toplevel)
 STAGED=$(git diff --cached --name-only --diff-filter=ACMR)
 
+if [ -z "$STAGED" ]; then
+  exit 0
+fi
+
 JAVA_FILES=$(printf '%s\n' "$STAGED" | grep '^backend/.*\.java$' || true)
 if [ -n "$JAVA_FILES" ]; then
   echo "Formatting staged Java files (Spotless)..."
-  FILES=$(printf '%s\n' "$JAVA_FILES" | sed 's#^backend/##' | paste -sd, -)
+  FILES=$(printf '%s\n' "$JAVA_FILES" | sed 's#^backend/#.*#; s#\.#\\.#g; s#/#[/\\\\]#g' | paste -sd, -)
   (cd "$ROOT/backend" && ./mvnw -q spotless:apply -DspotlessFiles="$FILES")
 fi
 
 WEB_FILES=$(printf '%s\n' "$STAGED" | grep -E '^frontend/.*\.(js|jsx|ts|tsx|mjs)$' || true)
+ESLINT_EXIT=0
 if [ -n "$WEB_FILES" ]; then
   echo "Fixing staged frontend files (ESLint --fix)..."
   FILES=$(printf '%s\n' "$WEB_FILES" | sed 's#^frontend/##')
-  (cd "$ROOT/frontend" && npx eslint --fix --max-warnings=0 $FILES)
+  (cd "$ROOT/frontend" && npx eslint --fix --max-warnings=0 $FILES) || ESLINT_EXIT=$?
 fi
 
-# Stop the commit if formatting modified any staged file.
+# Stop the commit if formatting modified any staged file in the working tree.
 CHANGED=$(printf '%s\n' "$STAGED" | while IFS= read -r f; do
   [ -z "$f" ] && continue
   if ! git diff --quiet -- "$f"; then
@@ -27,8 +32,14 @@ CHANGED=$(printf '%s\n' "$STAGED" | while IFS= read -r f; do
 done)
 
 if [ -n "$CHANGED" ]; then
-  echo "Pre-commit formatting changed the following files:"
+  echo ""
+  echo "Pre-commit auto-formatted the following files (now unstaged):"
   printf '%s\n' "$CHANGED" | sed 's/^/  /'
-  echo "Review the changes and commit again."
+  echo ""
+  echo "Please git add the formatted changes and commit again."
   exit 1
+fi
+
+if [ "$ESLINT_EXIT" -ne 0 ]; then
+  exit "$ESLINT_EXIT"
 fi
