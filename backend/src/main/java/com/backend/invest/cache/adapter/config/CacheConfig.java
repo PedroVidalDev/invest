@@ -10,10 +10,11 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 @Configuration
 public class CacheConfig {
 
-    @Bean
-    public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
-        RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1));
+  @Bean
+  public RedisCacheManager cacheManager(RedisConnectionFactory connectionFactory) {
+    RedisCacheConfiguration config =
+        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(1));
 
-        return RedisCacheManager.builder(connectionFactory).cacheDefaults(config).build();
-    }
+    return RedisCacheManager.builder(connectionFactory).cacheDefaults(config).build();
+  }
 }

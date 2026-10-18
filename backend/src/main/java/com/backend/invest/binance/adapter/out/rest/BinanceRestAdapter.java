@@ -22,7 +22,7 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
-  @Cacheable (cacheNames = "all-cryptos")
+  @Cacheable(cacheNames = "all-cryptos")
   public List<CryptoPrice> fetchAllPrices() {
     BinancePriceResponse[] body =
         restClient.get().uri("/api/v3/ticker/price").retrieve().body(BinancePriceResponse[].class);
