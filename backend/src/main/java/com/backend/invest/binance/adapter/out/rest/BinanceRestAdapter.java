@@ -22,7 +22,7 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
-  @Cacheable(cacheNames = "all-cryptos")
+  @Cacheable(cacheNames = "all-cryptos", unless = "#result.isEmpty()")
   public List<CryptoPrice> fetchAllPrices() {
     BinancePriceResponse[] body =
         restClient.get().uri("/api/v3/ticker/price").retrieve().body(BinancePriceResponse[].class);
@@ -36,10 +36,12 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
-  @Cacheable(cacheNames = "crypto-prices", key = "#symbol")
+  @Cacheable(cacheNames = "crypto-prices", key = "#symbol.toUpperCase()", unless = "#result.isEmpty()")
   public Optional<CryptoPrice> fetchPriceBySymbol(String symbol) {
+    String normalizedSymbol = symbol.toUpperCase();
+    
     BinancePriceResponse body =
-        restClient.get().uri(b -> b.path("/api/v3/ticker").queryParam("symbol", symbol).build())
+        restClient.get().uri(b -> b.path("/api/v3/ticker").queryParam("symbol", normalizedSymbol).build())
             .retrieve().body(BinancePriceResponse.class);
 
     if (body == null) {
