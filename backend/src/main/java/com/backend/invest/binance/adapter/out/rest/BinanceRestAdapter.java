@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
@@ -21,9 +22,10 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
+  @Cacheable (cacheNames = "all-cryptos")
   public List<CryptoPrice> fetchAllPrices() {
     BinancePriceResponse[] body =
-        restClient.get().uri("/api/v3/ticke/price").retrieve().body(BinancePriceResponse[].class);
+        restClient.get().uri("/api/v3/ticker/price").retrieve().body(BinancePriceResponse[].class);
 
     if (body == null) {
       return List.of();
@@ -34,6 +36,7 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
+  @Cacheable(cacheNames = "crypto-prices", key = "#symbol")
   public Optional<CryptoPrice> fetchPriceBySymbol(String symbol) {
     BinancePriceResponse body =
         restClient.get().uri(b -> b.path("/api/v3/ticker").queryParam("symbol", symbol).build())
