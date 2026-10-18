@@ -1,6 +1,8 @@
 package com.backend.invest.binance.domain;
 
-public class CryptoPrice {
+import java.io.Serializable;
+
+public class CryptoPrice implements Serializable {
   private final String symbol;
   private final Double price;
 
