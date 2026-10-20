@@ -36,13 +36,14 @@ public class BinanceRestAdapter implements BinanceMarketDataPort {
   }
 
   @Override
-  @Cacheable(cacheNames = "crypto-prices", key = "#symbol.toUpperCase()", unless = "#result.isEmpty()")
+  @Cacheable(cacheNames = "crypto-prices", key = "#symbol.toUpperCase()",
+      unless = "#result.isEmpty()")
   public Optional<CryptoPrice> fetchPriceBySymbol(String symbol) {
     String normalizedSymbol = symbol.toUpperCase();
-    
-    BinancePriceResponse body =
-        restClient.get().uri(b -> b.path("/api/v3/ticker").queryParam("symbol", normalizedSymbol).build())
-            .retrieve().body(BinancePriceResponse.class);
+
+    BinancePriceResponse body = restClient.get()
+        .uri(b -> b.path("/api/v3/ticker").queryParam("symbol", normalizedSymbol).build())
+        .retrieve().body(BinancePriceResponse.class);
 
     if (body == null) {
       return Optional.empty();
