@@ -1,0 +1,32 @@
+package com.backend.invest.user.adapter.out.persistence;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.backend.invest.instrument.adapter.out.persistence.InstrumentJpaEntity;
+import com.backend.invest.user.domain.User;
+
+@Repository 
+public class UserJpaRepository {
+    private final UserJpaSpringRepository springRepository;
+
+    public UserJpaRepository(UserJpaSpringRepository springRepository) {
+        this.springRepository = springRepository;
+    }
+
+    @Override
+    public User save(User user) {
+        return springRepository.save(UserJpaEntity.from(user)).toDomain();
+    }
+
+    @Override
+    public Optional<User> findById(String id) {
+        return springRepository.findById(id).map(UserJpaEntity::toDomain);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return springRepository.findAll().stream().map(UserJpaEntity::toDomain).toList();
+    }
+}
