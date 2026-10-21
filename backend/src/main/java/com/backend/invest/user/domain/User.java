@@ -27,11 +27,6 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public User(Object id2, String name2, String email2, String password2, String photo2, boolean active2,
-            CategoryType category2, LocalDateTime verifiedAt2, Object createdAt2, Object updatedAt2) {
-        //TODO Auto-generated constructor stub
-    }
-
     public String getId() {
         return this.id;
     }

@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.invest.instrument.adapter.in.web.dto.InstrumentSummaryResponse;
 import com.backend.invest.user.adapter.in.web.dto.UserResponse;
 import com.backend.invest.user.adapter.in.web.dto.UserSummaryResponse;
-import com.backend.invest.user.domain.port.in.CreateUserUseCase;
 import com.backend.invest.user.domain.port.in.UserQueryUseCase;
 
 @RestController 

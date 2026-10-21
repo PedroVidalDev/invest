@@ -19,7 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "Users")
+@Entity(name = "User")
 @Table(name = "tb_users")
 @Getter 
 @AllArgsConstructor 
@@ -43,7 +43,7 @@ public class UserJpaEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static UserJpaEntity from(com.backend.invest.user.domain.User user) {
+    public static UserJpaEntity from(User user) {
         return new UserJpaEntity(
                 user.getId(),
                 user.getName(),

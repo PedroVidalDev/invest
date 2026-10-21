@@ -1,14 +1,15 @@
 package com.backend.invest.user.adapter.out.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import com.backend.invest.instrument.adapter.out.persistence.InstrumentJpaEntity;
+import com.backend.invest.user.domain.port.out.UserRepositoryPort;
 import com.backend.invest.user.domain.User;
 
 @Repository 
-public class UserJpaRepository {
+public class UserJpaRepository implements UserRepositoryPort {
     private final UserJpaSpringRepository springRepository;
 
     public UserJpaRepository(UserJpaSpringRepository springRepository) {
