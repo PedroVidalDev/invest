@@ -6,6 +6,7 @@ import com.backend.invest.user.domain.CategoryType;
 import com.backend.invest.user.domain.User;
 
 public record CreateUserRequest(
+        String id,
         String name,
         String email,
         String password,
@@ -16,7 +17,7 @@ public record CreateUserRequest(
 
     public User toDomain() {
         return new User (
-            null,
+            id,
             name,
             email,
             password,

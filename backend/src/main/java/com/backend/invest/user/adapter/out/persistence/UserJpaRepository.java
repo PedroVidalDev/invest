@@ -3,6 +3,8 @@ package com.backend.invest.user.adapter.out.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.text.html.parser.Entity;
+
 import org.springframework.stereotype.Repository;
 
 import com.backend.invest.user.domain.port.out.UserRepositoryPort;
@@ -29,5 +31,15 @@ public class UserJpaRepository implements UserRepositoryPort {
     @Override
     public List<User> findAll() {
         return springRepository.findAll().stream().map(UserJpaEntity::toDomain).toList();
+    }
+
+    @Override 
+    public User update(User user) {
+        return springRepository.save(UserJpaEntity.from(user)).toDomain();
+    }
+
+    @Override
+    public void delete(String id) {
+        springRepository.deleteById(id);
     }
 }

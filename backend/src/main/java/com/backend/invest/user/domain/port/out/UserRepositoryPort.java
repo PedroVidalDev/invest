@@ -11,4 +11,8 @@ public interface UserRepositoryPort {
     Optional<User> findById(String id);
 
     List<User> findAll();
+
+    User update(User user);
+
+    void delete(String id);
 }
