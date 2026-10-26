@@ -22,7 +22,8 @@ public class UserUpdateController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(
-        @PathVariable String id
+        @PathVariable String id,
+        @RequestBody CreateUserRequest request
     ) {
         return ResponseEntity.ok(
             UserResponse.from(
