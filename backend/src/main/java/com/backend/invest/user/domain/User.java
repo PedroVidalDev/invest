@@ -79,6 +79,7 @@ public class User {
         this.updatedAt = LocalDateTime.now();
     }
 
+    //TO DO: Pensar se cria um entity somente de auth, para recover de senha, verify de email e tals, campo sem utilidade no momento
     public void verify() { 
         this.verifiedAt = LocalDateTime.now(); 
     }
