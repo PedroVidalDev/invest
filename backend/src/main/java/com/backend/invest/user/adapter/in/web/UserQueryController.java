@@ -24,10 +24,7 @@ public class UserQueryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> get(@PathVariable String id) {
-        return userQuery.findById(id)
-                .map(UserResponse::from)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        return ResponseEntity.ok(UserResponse.from(userQuery.findById(id)));
     }
 
     @GetMapping

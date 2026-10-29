@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.invest.user.adapter.in.web.dto.CreateUserRequest;
+import com.backend.invest.user.adapter.in.web.dto.UpdateUserRequest;
 import com.backend.invest.user.adapter.in.web.dto.UserResponse;
 import com.backend.invest.user.domain.port.in.UpdateUserUseCase;
 
@@ -23,11 +23,11 @@ public class UserUpdateController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponse> update(
         @PathVariable String id,
-        @RequestBody CreateUserRequest request
+        @RequestBody UpdateUserRequest request
     ) {
         return ResponseEntity.ok(
             UserResponse.from(
-                updateUser.update(request.toDomain())
+                updateUser.update(id, request.toCommand())
             )
         );  
     }

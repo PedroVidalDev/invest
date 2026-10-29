@@ -2,6 +2,8 @@ package com.backend.invest.user.domain;
 
 import java.time.LocalDateTime;
 
+import com.backend.invest.user.domain.exception.UserInactiveException;
+
 public class User {
     private String id;
     private String name;
@@ -67,8 +69,16 @@ public class User {
         return this.updatedAt;
     }
 
+    private void ensureActive() {
+        if (!this.active) {
+            throw new UserInactiveException(this.id);
+        }
+    }
+
     // Behavior Setters
     public void updateProfile(String name, String email, String photo) {
+        ensureActive();
+
         this.name = name;
         this.email = email;
         this.photo = photo;
@@ -80,7 +90,9 @@ public class User {
     }
 
     //TO DO: Pensar se cria um entity somente de auth, para recover de senha, verify de email e tals, campo sem utilidade no momento
-    public void verify() { 
+    public void verify() {
+        ensureActive();
+
         this.verifiedAt = LocalDateTime.now(); 
     }
 }

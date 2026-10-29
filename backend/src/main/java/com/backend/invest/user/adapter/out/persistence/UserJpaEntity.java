@@ -2,12 +2,15 @@ package com.backend.invest.user.adapter.out.persistence;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
 
 import com.backend.invest.user.domain.CategoryType;
 import com.backend.invest.user.domain.User;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -40,7 +43,12 @@ public class UserJpaEntity {
     private CategoryType category;
 
     private LocalDateTime verifiedAt;
+
+    @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public static UserJpaEntity from(User user) {
