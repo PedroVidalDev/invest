@@ -12,7 +12,7 @@ public interface UserRepositoryPort {
 
     List<User> findAll();
 
-    User update(User user);
+    boolean existsByEmail(String email);
 
     void delete(String id);
 }

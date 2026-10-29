@@ -66,4 +66,20 @@ public class User {
     public LocalDateTime getUpdatedAt() {
         return this.updatedAt;
     }
+
+    // Behavior Setters
+    public void updateProfile(String name, String email, String photo) {
+        this.name = name;
+        this.email = email;
+        this.photo = photo;
+    }
+
+    public void toggleActive() {
+        this.active = !this.active;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void verify() { 
+        this.verifiedAt = LocalDateTime.now(); 
+    }
 }
