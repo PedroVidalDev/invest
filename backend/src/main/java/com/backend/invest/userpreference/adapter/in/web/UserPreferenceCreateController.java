@@ -25,7 +25,7 @@ public class UserPreferenceCreateController {
     ) {
         return ResponseEntity.ok(
                 UserPreferenceResponse.from(
-                        createUserPreference.create(request.toDomain())
+                        createUserPreference.create(request.toCommand())
                 )
         );
     }

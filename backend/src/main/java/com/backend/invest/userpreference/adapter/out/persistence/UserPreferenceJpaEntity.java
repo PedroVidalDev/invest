@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.backend.invest.userpreference.domain.DisplayCurrencyType;
 import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.UserPreference;
@@ -31,8 +32,10 @@ public class UserPreferenceJpaEntity {
     private String id;
 
     private String userId;
-    private String cashInstrumentId;
-    private String displayCurrency;
+
+    @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private DisplayCurrencyType displayCurrency;
 
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
@@ -49,7 +52,6 @@ public class UserPreferenceJpaEntity {
         return new UserPreferenceJpaEntity(
                 userPreference.getId(),
                 userPreference.getUserId(),
-                userPreference.getCashInstrumentId(),
                 userPreference.getDisplayCurrency(),
                 userPreference.getLanguage(),
                 userPreference.getTheme(),
@@ -61,7 +63,6 @@ public class UserPreferenceJpaEntity {
         return new UserPreference(
                 id,
                 userId,
-                cashInstrumentId,
                 displayCurrency,
                 language,
                 theme,

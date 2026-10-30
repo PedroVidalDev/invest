@@ -22,12 +22,11 @@ public class UserPreferenceQueryController {
         this.userPreferenceQuery = userPreferenceQuery;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserPreferenceResponse> get(@PathVariable String id) {
-        return userPreferenceQuery.findById(id)
-                .map(UserPreferenceResponse::from)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserPreferenceResponse> get(@PathVariable String userId) {
+        return ResponseEntity.ok(
+                UserPreferenceResponse.from(userPreferenceQuery.findByUserId(userId))
+        );
     }
 
     @GetMapping
