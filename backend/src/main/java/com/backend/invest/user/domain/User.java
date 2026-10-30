@@ -69,21 +69,7 @@ public class User {
         return this.updatedAt;
     }
 
-    private void ensureActive() {
-        if (!this.active) {
-            throw new UserInactiveException(this.id);
-        }
-    }
-
     // Behavior Setters
-    public void updateProfile(String name, String email, String photo) {
-        ensureActive();
-
-        this.name = name;
-        this.email = email;
-        this.photo = photo;
-    }
-
     public void toggleActive() {
         this.active = !this.active;
         this.updatedAt = LocalDateTime.now();
@@ -91,7 +77,9 @@ public class User {
 
     //TO DO: Pensar se cria um entity somente de auth, para recover de senha, verify de email e tals, campo sem utilidade no momento
     public void verify() {
-        ensureActive();
+        if (!this.active) {
+            throw new UserInactiveException(this.id);
+        }
 
         this.verifiedAt = LocalDateTime.now(); 
     }

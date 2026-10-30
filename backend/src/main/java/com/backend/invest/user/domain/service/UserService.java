@@ -1,15 +1,19 @@
 package com.backend.invest.user.domain.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.backend.invest.user.domain.CategoryType;
 import com.backend.invest.user.domain.User;
 import com.backend.invest.user.domain.exception.UserAlreadyExistsException;
+import com.backend.invest.user.domain.exception.UserInactiveException;
 import com.backend.invest.user.domain.exception.UserNotFoundException;
 import com.backend.invest.user.domain.port.in.CreateUserUseCase;
 import com.backend.invest.user.domain.port.in.DeleteUserUseCase;
 import com.backend.invest.user.domain.port.in.ToggleActiveUseCase;
 import com.backend.invest.user.domain.port.in.UpdateUserUseCase;
 import com.backend.invest.user.domain.port.in.UserQueryUseCase;
+import com.backend.invest.user.domain.port.in.command.CreateUserCommand;
 import com.backend.invest.user.domain.port.in.command.UpdateUserCommand;
 import com.backend.invest.user.domain.port.out.UserRepositoryPort;
 
@@ -27,10 +31,25 @@ public class UserService
     }
 
     @Override
-    public User create(User user) {
-        if (repository.existsByEmail(user.getEmail())) {
-            throw new UserAlreadyExistsException(user.getEmail());
+    public User create(CreateUserCommand command) {
+        if (repository.existsByEmail(command.email())) {
+            throw new UserAlreadyExistsException(command.email());
         }
+
+        User user = new User(
+            null, 
+
+            command.name(), 
+            command.email(), 
+            command.password(), 
+            command.photo(), 
+            
+            false, 
+            CategoryType.USER,
+            null, 
+            null, 
+            null
+        );
 
         return repository.save(user);
     }
@@ -49,12 +68,31 @@ public class UserService
     public User update(String id, UpdateUserCommand command) {
         User user = getUserOrThrow(id);
 
+        if (!user.getActive()) {
+            throw new UserInactiveException(id);
+        }
+
         if (!user.getEmail().equals(command.email()) && repository.existsByEmail(command.email())) {
             throw new UserAlreadyExistsException(command.email());
         }
 
-        user.updateProfile(command.name(), command.email(), command.photo());
-        return repository.save(user);
+        User updatedUser = new User(
+                user.getId(),
+
+                command.name(),
+                command.email(),
+
+                user.getPassword(),
+
+                command.photo(),
+                
+                user.getActive(),
+                user.getCategory(),
+                user.getVerifiedAt(),
+                user.getCreatedAt(),
+                user.getUpdatedAt());
+
+        return repository.save(updatedUser);
     }
 
     @Override
