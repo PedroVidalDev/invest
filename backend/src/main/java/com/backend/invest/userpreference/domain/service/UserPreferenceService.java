@@ -1,28 +1,82 @@
 package com.backend.invest.userpreference.domain.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
+import com.backend.invest.user.domain.port.in.UserQueryUseCase;
 import com.backend.invest.userpreference.domain.UserPreference;
+import com.backend.invest.userpreference.domain.exception.UserPreferenceAlreadyExistsException;
+import com.backend.invest.userpreference.domain.exception.UserPreferenceNotFoundException;
 import com.backend.invest.userpreference.domain.port.in.CreateUserPreferenceUseCase;
+import com.backend.invest.userpreference.domain.port.in.UpdateUserPreferenceUseCase;
 import com.backend.invest.userpreference.domain.port.in.UserPreferenceQueryUseCase;
+import com.backend.invest.userpreference.domain.port.in.command.CreateUserPreferenceCommand;
+import com.backend.invest.userpreference.domain.port.in.command.UpdateUserPreferenceCommand;
 import com.backend.invest.userpreference.domain.port.out.UserPreferenceRepositoryPort;
 
-public class UserPreferenceService implements CreateUserPreferenceUseCase, UserPreferenceQueryUseCase {
+public class UserPreferenceService
+        implements CreateUserPreferenceUseCase, UserPreferenceQueryUseCase, UpdateUserPreferenceUseCase {
     private final UserPreferenceRepositoryPort repository;
+    private final UserQueryUseCase userQuery;
 
-    public UserPreferenceService(UserPreferenceRepositoryPort repository) {
+    public UserPreferenceService(UserPreferenceRepositoryPort repository, UserQueryUseCase userQuery) {
         this.repository = repository;
+        this.userQuery = userQuery;
     }
 
     @Override
-    public UserPreference create(UserPreference userPreference) {
+    public UserPreference create(CreateUserPreferenceCommand command) {
+        userQuery.findById(command.userId());
+
+        if (repository.findByUserId(command.userId()) == null) {
+            throw new UserPreferenceAlreadyExistsException(command.userId());
+        }
+
+        UserPreference userPreference = new UserPreference(
+                null,
+
+                command.userId(),
+                command.displayCurrency(),
+                command.language(),
+                command.theme(),
+
+                LocalDateTime.now(),
+                LocalDateTime.now());
+
         return repository.save(userPreference);
     }
 
     @Override
-    public Optional<UserPreference> findById(String id) {
+    public UserPreference update(String id, UpdateUserPreferenceCommand command) {
+        userQuery.findById(command.userId());
+        UserPreference userPreference = findById(id);
+
+        if (userPreference == null) {
+            throw new UserPreferenceNotFoundException(id);
+        }
+
+        UserPreference updatedUserPreference = new UserPreference(
+                userPreference.getId(),
+                userPreference.getUserId(),
+
+                command.displayCurrency(),
+                command.language(),
+                command.theme(),
+
+                userPreference.getCreatedAt(),
+                LocalDateTime.now());
+
+        return repository.save(updatedUserPreference);
+    }
+
+    @Override
+    public UserPreference findById(String id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public UserPreference findByUserId(String id) {
+        return repository.findByUserId(id);
     }
 
     @Override

@@ -1,14 +1,15 @@
 package com.backend.invest.userpreference.domain.port.out;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.backend.invest.userpreference.domain.UserPreference;
 
 public interface UserPreferenceRepositoryPort {
     UserPreference save (UserPreference userPreference);
 
-    Optional<UserPreference> findById (String id);
+    UserPreference findById (String id);
+
+    UserPreference findByUserId(String userid);
 
     List<UserPreference> findAll();
 }

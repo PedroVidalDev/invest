@@ -5,17 +5,15 @@ import java.time.LocalDateTime;
 public class UserPreference {
     private String id;
     private String userId;
-    private String cashInstrumentId;
-    private String displayCurrency;
+    private DisplayCurrencyType displayCurrency;
     private LanguageType language;
     private ThemeType theme;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public UserPreference (String id, String userId, String cashInstrumentId, String displayCurrency, LanguageType language, ThemeType theme, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public UserPreference (String id, String userId, DisplayCurrencyType displayCurrency, LanguageType language, ThemeType theme, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
-        this.cashInstrumentId = cashInstrumentId;
         this.displayCurrency = displayCurrency;
         this.language = language;
         this.theme = theme;
@@ -31,11 +29,7 @@ public class UserPreference {
         return this.userId;
     }
 
-    public String getCashInstrumentId() {
-        return this.cashInstrumentId;
-    }
-
-    public String getDisplayCurrency() {
+    public DisplayCurrencyType getDisplayCurrency() {
         return this.displayCurrency;
     }
 

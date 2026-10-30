@@ -25,7 +25,7 @@ public class UserService
         this.repository = repository;
     }
 
-    private User getUserOrThrow(String id) {
+    public User getUserOrThrow(String id) {
         return repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -47,8 +47,8 @@ public class UserService
             true, 
             CategoryType.USER,
             null, 
-            null, 
-            null
+            LocalDateTime.now(), 
+            LocalDateTime.now()
         );
 
         return repository.save(user);
@@ -90,7 +90,8 @@ public class UserService
                 user.getCategory(),
                 user.getVerifiedAt(),
                 user.getCreatedAt(),
-                user.getUpdatedAt());
+                LocalDateTime.now()
+            );
 
         return repository.save(updatedUser);
     }
