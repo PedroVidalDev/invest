@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.invest.userinstrument.adapter.in.web.dto.UserInstrumentResponse;
 import com.backend.invest.userinstrument.adapter.in.web.dto.UserInstrumentSummaryResponse;
 import com.backend.invest.userinstrument.domain.port.in.UserInstrumentQueryUseCase;
 
@@ -21,17 +20,9 @@ public class UserInstrumentQueryController {
         this.userInstrumentQuery = userInstrumentQuery;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserInstrumentResponse> get(@PathVariable String id) {
-        return userInstrumentQuery.findById(id)
-                .map(UserInstrumentResponse::from)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserInstrumentSummaryResponse>> list() {
-        List<UserInstrumentSummaryResponse> body = userInstrumentQuery.findAll()
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<UserInstrumentSummaryResponse>> list(@PathVariable String userId) {
+        List<UserInstrumentSummaryResponse> body = userInstrumentQuery.findByUserId(userId)
                 .stream()
                 .map(UserInstrumentSummaryResponse::from)
                 .toList();

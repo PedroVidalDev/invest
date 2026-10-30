@@ -25,7 +25,7 @@ public class UserInstrumentCreateController {
     ) {
         return ResponseEntity.ok(
             UserInstrumentResponse.from(
-                createUserInstrument.create(request.toDomain())
+                createUserInstrument.create(request.toCommand())
             )
         );
     }

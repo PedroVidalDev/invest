@@ -1,19 +1,12 @@
 package com.backend.invest.userinstrument.adapter.in.web.dto;
 
-import com.backend.invest.userinstrument.domain.UserInstrument;
+import com.backend.invest.userinstrument.domain.port.in.command.CreateUserInstrumentCommand;
 
 public record CreateUserInstrumentRequest (
-    String id,
     String userId,
     String instrumentId
 ){
-    public UserInstrument toDomain() {
-        return new UserInstrument (
-            id,
-            userId,
-            instrumentId,
-            null,
-            null
-        );
+    public CreateUserInstrumentCommand toCommand() {
+        return new CreateUserInstrumentCommand(userId, instrumentId);
     }
 }

@@ -1,7 +1,6 @@
 package com.backend.invest.userinstrument.adapter.out.persistence;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -22,12 +21,17 @@ public class UserInstrumentJpaRepository implements UserInstrumentRepositoryPort
     }
 
     @Override
-    public Optional<UserInstrument> findById(String id) {
-        return springRepository.findById(id).map(UserInstrumentJpaEntity::toDomain);
+    public List<UserInstrument> findByUserId(String userId) {
+        return springRepository.findByUserId(userId).stream().map(UserInstrumentJpaEntity::toDomain).toList();
     }
 
     @Override
-    public List<UserInstrument> findAll() {
-        return springRepository.findAll().stream().map(UserInstrumentJpaEntity::toDomain).toList();
+    public boolean existsByUserIdAndInstrumentId(String userId, String instrumentId) {
+        return springRepository.existsByUserIdAndInstrumentId(userId, instrumentId);
+    }
+
+    @Override
+    public void deleteByUserIdAndInstrumentId(String userId, String instrumentId) {
+        springRepository.deleteByUserIdAndInstrumentId(userId, instrumentId);
     }
 }
