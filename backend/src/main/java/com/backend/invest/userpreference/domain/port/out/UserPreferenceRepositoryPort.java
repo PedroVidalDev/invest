@@ -7,8 +7,6 @@ import com.backend.invest.userpreference.domain.UserPreference;
 public interface UserPreferenceRepositoryPort {
     UserPreference save (UserPreference userPreference);
 
-    UserPreference findById (String id);
-
     UserPreference findByUserId(String userid);
 
     List<UserPreference> findAll();

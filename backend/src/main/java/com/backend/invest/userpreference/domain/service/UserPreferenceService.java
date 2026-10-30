@@ -28,7 +28,7 @@ public class UserPreferenceService
     public UserPreference create(CreateUserPreferenceCommand command) {
         userQuery.findById(command.userId());
 
-        if (repository.findByUserId(command.userId()) == null) {
+        if (repository.findByUserId(command.userId()) != null) {
             throw new UserPreferenceAlreadyExistsException(command.userId());
         }
 
@@ -47,13 +47,9 @@ public class UserPreferenceService
     }
 
     @Override
-    public UserPreference update(String id, UpdateUserPreferenceCommand command) {
-        userQuery.findById(command.userId());
-        UserPreference userPreference = findById(id);
-
-        if (userPreference == null) {
-            throw new UserPreferenceNotFoundException(id);
-        }
+    public UserPreference update(String userId, UpdateUserPreferenceCommand command) {
+        userQuery.findById(userId);
+        UserPreference userPreference = findByUserId(userId);
 
         UserPreference updatedUserPreference = new UserPreference(
                 userPreference.getId(),
@@ -70,13 +66,14 @@ public class UserPreferenceService
     }
 
     @Override
-    public UserPreference findById(String id) {
-        return repository.findById(id);
-    }
+    public UserPreference findByUserId(String userId) {
+        UserPreference userPreference = repository.findByUserId(userId);
 
-    @Override
-    public UserPreference findByUserId(String id) {
-        return repository.findByUserId(id);
+        if (userPreference == null) {
+            throw new UserPreferenceNotFoundException(userId);
+        }
+
+        return userPreference;
     }
 
     @Override

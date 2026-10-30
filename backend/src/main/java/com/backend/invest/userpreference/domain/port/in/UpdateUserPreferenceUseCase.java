@@ -4,5 +4,5 @@ import com.backend.invest.userpreference.domain.UserPreference;
 import com.backend.invest.userpreference.domain.port.in.command.UpdateUserPreferenceCommand;
 
 public interface UpdateUserPreferenceUseCase {
-    UserPreference update(String id, UpdateUserPreferenceCommand userPreference);
+    UserPreference update(String userId, UpdateUserPreferenceCommand userPreference);
 }
