@@ -8,5 +8,7 @@ public interface UserInstrumentRepositoryPort {
 
     List<UserInstrument> findByUserId(String userId);
 
-    void delete(String id);
+    boolean existsByUserIdAndInstrumentId(String userId, String instrumentId);
+
+    void deleteByUserIdAndInstrumentId(String userId, String instrumentId);
 }
