@@ -44,7 +44,7 @@ public class UserService
             command.password(), 
             command.photo(), 
             
-            false, 
+            true, 
             CategoryType.USER,
             null, 
             null, 

@@ -1,26 +1,14 @@
 package com.backend.invest.user.adapter.in.web.dto;
 
-import com.backend.invest.user.domain.CategoryType;
-import com.backend.invest.user.domain.User;
+import com.backend.invest.user.domain.port.in.command.CreateUserCommand;
 
 public record CreateUserRequest(
-        String name,
-        String email,
-        String password,
-        String photo) {
-
-    public User toDomain() {
-        return new User (
-            null,
-            name,
-            email,
-            password,
-            photo,
-            true,
-            CategoryType.USER,
-            null,
-            null,
-            null
-        );
+    String name, 
+    String email, 
+    String password, 
+    String photo
+) {
+    public CreateUserCommand toCommand() {
+        return new CreateUserCommand(name, email, password, photo);
     }
 }

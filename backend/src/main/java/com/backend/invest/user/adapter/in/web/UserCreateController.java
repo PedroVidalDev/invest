@@ -25,7 +25,7 @@ public class UserCreateController {
     ) {
         return ResponseEntity.ok(
             UserResponse.from(
-                createUser.create(request.toDomain())
+                createUser.create(request.toCommand())
             )
         );
     }
