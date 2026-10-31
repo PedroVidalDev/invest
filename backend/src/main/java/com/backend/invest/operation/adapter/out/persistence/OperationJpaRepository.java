@@ -11,26 +11,24 @@ import java.util.Optional;
 @Repository
 public class OperationJpaRepository implements OperationRepositoryPort {
 
-    private final OperationJpaSpringRepository springRepository;
+  private final OperationJpaSpringRepository springRepository;
 
-    public OperationJpaRepository(OperationJpaSpringRepository springRepository) {
-        this.springRepository = springRepository;
-    }
+  public OperationJpaRepository(OperationJpaSpringRepository springRepository) {
+    this.springRepository = springRepository;
+  }
 
-    @Override
-    public Operation save(Operation operation) {
-        return springRepository.save(OperationJpaEntity.from(operation)).toDomain();
-    }
+  @Override
+  public Operation save(Operation operation) {
+    return springRepository.save(OperationJpaEntity.from(operation)).toDomain();
+  }
 
-    @Override
-    public Optional<Operation> findById(String id) {
-        return springRepository.findById(id).map(OperationJpaEntity::toDomain);
-    }
+  @Override
+  public Optional<Operation> findById(String id) {
+    return springRepository.findById(id).map(OperationJpaEntity::toDomain);
+  }
 
-    @Override
-    public List<Operation> findAll() {
-        return springRepository.findAll().stream()
-                .map(OperationJpaEntity::toDomain)
-                .toList();
-    }
+  @Override
+  public List<Operation> findAll() {
+    return springRepository.findAll().stream().map(OperationJpaEntity::toDomain).toList();
+  }
 }

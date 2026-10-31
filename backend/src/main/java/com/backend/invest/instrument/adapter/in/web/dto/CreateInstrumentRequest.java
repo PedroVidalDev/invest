@@ -6,24 +6,6 @@ import com.backend.invest.instrument.domain.InstrumentType;
 
 import java.time.LocalDateTime;
 
-public record CreateInstrumentRequest (
-        InstrumentType type,
-        String symbol,
-        String name,
-        IndexerType indexer,
-        LocalDateTime maturityDate
-    ){
+public record CreateInstrumentRequest(InstrumentType type,String symbol,String name,IndexerType indexer,LocalDateTime maturityDate){
 
-    public Instrument toDomain() {
-        return new Instrument (
-                null,
-                type,
-                symbol,
-                name,
-                indexer,
-                maturityDate,
-                null,
-                null
-        );
-    }
-}
+public Instrument toDomain(){return new Instrument(null,type,symbol,name,indexer,maturityDate,null,null);}}

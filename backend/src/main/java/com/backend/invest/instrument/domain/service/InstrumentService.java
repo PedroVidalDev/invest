@@ -9,24 +9,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class InstrumentService implements CreateInstrumentUseCase, InstrumentQueryUseCase {
-    private final InstrumentRepositoryPort repository;
+  private final InstrumentRepositoryPort repository;
 
-    public InstrumentService (InstrumentRepositoryPort repository) {
-        this.repository = repository;
-    }
+  public InstrumentService(InstrumentRepositoryPort repository) {
+    this.repository = repository;
+  }
 
-    @Override
-    public Instrument create(Instrument instrument) {
-        return repository.save(instrument);
-    }
+  @Override
+  public Instrument create(Instrument instrument) {
+    return repository.save(instrument);
+  }
 
-    @Override
-    public Optional<Instrument> findById(String id) {
-        return repository.findById(id);
-    }
+  @Override
+  public Optional<Instrument> findById(String id) {
+    return repository.findById(id);
+  }
 
-    @Override
-    public List<Instrument> findAll() {
-        return repository.findAll();
-    }
+  @Override
+  public List<Instrument> findAll() {
+    return repository.findAll();
+  }
 }

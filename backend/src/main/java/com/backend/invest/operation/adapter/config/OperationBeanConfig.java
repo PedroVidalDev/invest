@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OperationBeanConfig {
 
-    @Bean
-    public OperationService operationService(OperationRepositoryPort repositoryPort) {
-        return new OperationService(repositoryPort);
-    }
+  @Bean
+  public OperationService operationService(OperationRepositoryPort repositoryPort) {
+    return new OperationService(repositoryPort);
+  }
 }

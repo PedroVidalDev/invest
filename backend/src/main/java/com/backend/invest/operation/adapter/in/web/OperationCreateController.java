@@ -14,15 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/operations")
 public class OperationCreateController {
 
-    private final CreateOperationUseCase createOperation;
+  private final CreateOperationUseCase createOperation;
 
-    public OperationCreateController(CreateOperationUseCase createOperation) {
-        this.createOperation = createOperation;
-    }
+  public OperationCreateController(CreateOperationUseCase createOperation) {
+    this.createOperation = createOperation;
+  }
 
-    @PostMapping
-    public ResponseEntity<OperationResponse> create(@RequestBody CreateOperationRequest request) {
-        return ResponseEntity.ok(
-                OperationResponse.from(createOperation.create(request.toDomain())));
-    }
+  @PostMapping
+  public ResponseEntity<OperationResponse> create(@RequestBody CreateOperationRequest request) {
+    return ResponseEntity.ok(OperationResponse.from(createOperation.create(request.toDomain())));
+  }
 }

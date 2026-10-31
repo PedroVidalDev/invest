@@ -16,27 +16,23 @@ import java.util.List;
 @RequestMapping("/instruments")
 public class InstrumentQueryController {
 
-    private final InstrumentQueryUseCase instrumentQuery;
+  private final InstrumentQueryUseCase instrumentQuery;
 
-    public InstrumentQueryController(InstrumentQueryUseCase instrumentQuery) {
-        this.instrumentQuery = instrumentQuery;
-    }
+  public InstrumentQueryController(InstrumentQueryUseCase instrumentQuery) {
+    this.instrumentQuery = instrumentQuery;
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<InstrumentResponse> get(@PathVariable String id) {
-        return instrumentQuery.findById(id)
-                .map(InstrumentResponse::from)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<InstrumentResponse> get(@PathVariable String id) {
+    return instrumentQuery.findById(id).map(InstrumentResponse::from).map(ResponseEntity::ok)
+        .orElseGet(() -> ResponseEntity.notFound().build());
+  }
 
-    @GetMapping
-    public ResponseEntity<List<InstrumentSummaryResponse>> list() {
-        List<InstrumentSummaryResponse> body = instrumentQuery.findAll()
-                .stream()
-                .map(InstrumentSummaryResponse::from)
-                .toList();
+  @GetMapping
+  public ResponseEntity<List<InstrumentSummaryResponse>> list() {
+    List<InstrumentSummaryResponse> body =
+        instrumentQuery.findAll().stream().map(InstrumentSummaryResponse::from).toList();
 
-        return ResponseEntity.ok(body);
-    }
+    return ResponseEntity.ok(body);
+  }
 }

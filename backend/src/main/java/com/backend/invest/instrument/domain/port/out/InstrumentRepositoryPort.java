@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InstrumentRepositoryPort {
-    Instrument save(Instrument instrument);
+  Instrument save(Instrument instrument);
 
-    Optional<Instrument> findById(String id);
+  Optional<Instrument> findById(String id);
 
-    List<Instrument> findAll();
+  List<Instrument> findAll();
 }

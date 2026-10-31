@@ -31,54 +31,39 @@ import org.hibernate.type.SqlTypes;
 @NoArgsConstructor
 public class OperationJpaEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    @Column(name = "instrument_id")
-    private String instrumentId;
+  @Column(name = "instrument_id")
+  private String instrumentId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "instrument_id", insertable = false, updatable = false)
-    private InstrumentJpaEntity instrument;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "instrument_id", insertable = false, updatable = false)
+  private InstrumentJpaEntity instrument;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private OperationType type;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private OperationType type;
 
-    private Double assetValue;
-    private Double quantity;
+  private Double assetValue;
+  private Double quantity;
 
-    private Integer annualRate;
+  private Integer annualRate;
 
-    private LocalDateTime executedAt;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  private LocalDateTime executedAt;
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 
-    public static OperationJpaEntity from(Operation operation) {
-        return new OperationJpaEntity(
-                operation.getId(),
-                operation.getInstrumentId(),
-                null,
-                operation.getType(),
-                operation.getAssetValue(),
-                operation.getQuantity(),
-                operation.getAnnualRate(),
-                operation.getExecutedAt(),
-                operation.getCreatedAt(),
-                operation.getUpdatedAt());
-    }
+  public static OperationJpaEntity from(Operation operation) {
+    return new OperationJpaEntity(operation.getId(), operation.getInstrumentId(), null,
+        operation.getType(), operation.getAssetValue(), operation.getQuantity(),
+        operation.getAnnualRate(), operation.getExecutedAt(), operation.getCreatedAt(),
+        operation.getUpdatedAt());
+  }
 
-    public Operation toDomain() {
-        return new Operation(
-                id,
-                instrumentId,
-                type,
-                assetValue,
-                quantity,
-                annualRate,
-                executedAt,
-                createdAt,
-                updatedAt);
-    }
+  public Operation toDomain() {
+    return new Operation(id, instrumentId, type, assetValue, quantity, annualRate, executedAt,
+        createdAt, updatedAt);
+  }
 }

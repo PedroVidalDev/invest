@@ -9,24 +9,24 @@ import java.util.Optional;
 
 @Repository
 public class InstrumentJpaRepository implements InstrumentRepositoryPort {
-    private final InstrumentJpaSpringRepository springRepository;
+  private final InstrumentJpaSpringRepository springRepository;
 
-    public InstrumentJpaRepository(InstrumentJpaSpringRepository springRepository) {
-        this.springRepository = springRepository;
-    }
+  public InstrumentJpaRepository(InstrumentJpaSpringRepository springRepository) {
+    this.springRepository = springRepository;
+  }
 
-    @Override
-    public Instrument save(Instrument instrument) {
-        return springRepository.save(InstrumentJpaEntity.from(instrument)).toDomain();
-    }
+  @Override
+  public Instrument save(Instrument instrument) {
+    return springRepository.save(InstrumentJpaEntity.from(instrument)).toDomain();
+  }
 
-    @Override
-    public Optional<Instrument> findById(String id) {
-        return springRepository.findById(id).map(InstrumentJpaEntity::toDomain);
-    }
+  @Override
+  public Optional<Instrument> findById(String id) {
+    return springRepository.findById(id).map(InstrumentJpaEntity::toDomain);
+  }
 
-    @Override
-    public List<Instrument> findAll() {
-        return springRepository.findAll().stream().map(InstrumentJpaEntity::toDomain).toList();
-    }
+  @Override
+  public List<Instrument> findAll() {
+    return springRepository.findAll().stream().map(InstrumentJpaEntity::toDomain).toList();
+  }
 }
