@@ -11,7 +11,8 @@ public class Token {
   private LocalDateTime expiresAt;
   private LocalDateTime createdAt;
 
-  public Token (String id, String userId, ServiceType service, String code, int attempts, LocalDateTime expiresAt, LocalDateTime createdAt) {
+  public Token(String id, String userId, ServiceType service, String code, int attempts,
+      LocalDateTime expiresAt, LocalDateTime createdAt) {
     this.id = id;
     this.userId = userId;
     this.service = service;
@@ -47,5 +48,10 @@ public class Token {
 
   public LocalDateTime getCreatedAt() {
     return this.createdAt;
+  }
+
+  // Behavior Setters
+  public void incrementAttempts() {
+    this.attempts++;
   }
 }
