@@ -2,7 +2,7 @@ package com.backend.invest.user.domain.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import com.backend.invest.auth.domain.port.out.PasswordEncoderPort;
 import com.backend.invest.user.domain.CategoryType;
 import com.backend.invest.user.domain.User;
 import com.backend.invest.user.domain.exception.UserAlreadyExistsException;
@@ -20,8 +20,10 @@ import com.backend.invest.user.domain.port.out.UserRepositoryPort;
 public class UserService implements CreateUserUseCase, UserQueryUseCase, UpdateUserUseCase,
     DeleteUserUseCase, ToggleActiveUseCase {
   private final UserRepositoryPort repository;
+  private final PasswordEncoderPort passwordEncoder;
 
-  public UserService(UserRepositoryPort repository) {
+  public UserService(UserRepositoryPort repository, PasswordEncoderPort encoder) {
+    this.passwordEncoder = encoder;
     this.repository = repository;
   }
 
@@ -35,8 +37,9 @@ public class UserService implements CreateUserUseCase, UserQueryUseCase, UpdateU
       throw new UserAlreadyExistsException(command.email());
     }
 
-    User user = new User(null, command.name(), command.email(), command.password(), command.photo(),
-        true, CategoryType.USER, null, LocalDateTime.now(), LocalDateTime.now());
+    User user = new User(null, command.name(), command.email(),
+        passwordEncoder.encode(command.password()), command.photo(), true, CategoryType.USER, null,
+        LocalDateTime.now(), LocalDateTime.now());
 
     return repository.save(user);
   }
