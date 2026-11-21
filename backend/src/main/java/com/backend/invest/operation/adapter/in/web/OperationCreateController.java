@@ -22,6 +22,6 @@ public class OperationCreateController {
 
   @PostMapping
   public ResponseEntity<OperationResponse> create(@RequestBody CreateOperationRequest request) {
-    return ResponseEntity.ok(OperationResponse.from(createOperation.create(request.toDomain())));
+    return ResponseEntity.ok(OperationResponse.from(createOperation.create(request.toCommand())));
   }
 }

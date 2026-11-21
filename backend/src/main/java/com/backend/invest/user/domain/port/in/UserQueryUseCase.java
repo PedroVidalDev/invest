@@ -7,5 +7,7 @@ import com.backend.invest.user.domain.User;
 public interface UserQueryUseCase {
     User findById(String id);
 
+    User findByEmail(String email);
+
     List<User> findAll();
 }
