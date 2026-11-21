@@ -22,6 +22,6 @@ public class InstrumentCreateController {
 
   @PostMapping
   public ResponseEntity<InstrumentResponse> create(@RequestBody CreateInstrumentRequest request) {
-    return ResponseEntity.ok(InstrumentResponse.from(createInstrument.create(request.toDomain())));
+    return ResponseEntity.ok(InstrumentResponse.from(createInstrument.create(request.toCommand())));
   }
 }
