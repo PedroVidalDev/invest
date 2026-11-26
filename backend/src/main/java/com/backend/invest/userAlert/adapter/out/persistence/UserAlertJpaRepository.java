@@ -46,4 +46,9 @@ public class UserAlertJpaRepository implements UserAlertRepositoryPort {
   public void deleteByUserIdAndInstrumentId(String userId, String instrumentId) {
     springRepository.deleteByUserIdAndInstrumentId(userId, instrumentId);
   }
+
+  @Override
+  public List<UserAlert> findByActiveTrue() {
+    return springRepository.findByActiveTrue().stream().map(UserAlertJpaEntity::toDomain).toList();
+  }
 }

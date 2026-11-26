@@ -13,6 +13,8 @@ public interface UserAlertJpaSpringRepository extends JpaRepository<UserAlertJpa
 
   boolean existsByUserIdAndInstrumentId(String userId, String instrumentId);
 
+  List<UserAlertJpaEntity> findByActiveTrue();
+
   @Transactional
   void deleteByUserIdAndInstrumentId(String userId, String instrumentId);
 }

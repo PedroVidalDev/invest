@@ -17,4 +17,6 @@ public interface UserAlertRepositoryPort {
   boolean existsByUserIdAndInstrumentId(String userId, String instrumentId);
 
   void deleteByUserIdAndInstrumentId(String userId, String instrumentId);
+
+  List<UserAlert> findByActiveTrue();
 }
