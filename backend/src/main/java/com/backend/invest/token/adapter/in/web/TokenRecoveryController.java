@@ -25,17 +25,12 @@ public class TokenRecoveryController {
         this.userQuery = userQuery;
     }
 
-    /**
-     * Always answers 202, whether the email exists or not,
-     * so the endpoint can't be used to discover registered emails.
-     */
     @PostMapping("/recovery")
     public ResponseEntity<Void> recovery(@RequestBody RecoveryTokenRequest request) {
         try {
             User user = userQuery.findByEmail(request.email());
             createToken.create(new CreateTokenCommand(user.getId(), ServiceType.RECOVERY));
         } catch (UserNotFoundException ignored) {
-            // Intentionally silent
         }
 
         return ResponseEntity.accepted().build();

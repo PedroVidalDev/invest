@@ -28,12 +28,6 @@ public class TokenService implements CreateTokenUseCase, TokenQueryUseCase, Veri
     this.repository = repository;
   }
 
-  /**
-   * Creates a new token for the user. Any existing token (of any type) is replaced,
-   * so this also covers "resend" and "recreate after expiration".
-   * A new token can only be issued after the resend cooldown, otherwise resending
-   * would reset the attempts counter and allow brute forcing the code.
-   */
   @Override
   public Token create(CreateTokenCommand command) {
     LocalDateTime now = LocalDateTime.now();
@@ -80,7 +74,6 @@ public class TokenService implements CreateTokenUseCase, TokenQueryUseCase, Veri
       throw new TokenExpiredException(userId);
     }
 
-    // A blocked token is kept (not deleted) so the resend cooldown still applies to it.
     if (token.getAttempts() >= MAX_ATTEMPTS) {
       throw new TokenAttemptsExceededException(userId);
     }

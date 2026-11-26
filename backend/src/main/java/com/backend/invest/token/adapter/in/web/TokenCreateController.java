@@ -24,7 +24,6 @@ public class TokenCreateController {
 
     @PostMapping
     public ResponseEntity<TokenResponse> create(@RequestBody CreateTokenRequest request) {
-        // Throws UserNotFoundException (404) before hitting the database FK
         userQuery.findById(request.userId());
 
         return ResponseEntity.ok(
