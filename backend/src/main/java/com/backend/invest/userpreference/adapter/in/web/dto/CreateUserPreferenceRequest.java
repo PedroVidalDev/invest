@@ -7,11 +7,12 @@ import com.backend.invest.userpreference.domain.port.in.command.CreateUserPrefer
 
 public record CreateUserPreferenceRequest(
     String userId,
+    String userBinanceApiKey,
     DisplayCurrencyType displayCurrency,
     LanguageType language,
     ThemeType theme
 ) {
     public CreateUserPreferenceCommand toCommand() {
-        return new CreateUserPreferenceCommand(userId, displayCurrency, language, theme);
+        return new CreateUserPreferenceCommand(userId, userBinanceApiKey, displayCurrency, language, theme);
     }
 }

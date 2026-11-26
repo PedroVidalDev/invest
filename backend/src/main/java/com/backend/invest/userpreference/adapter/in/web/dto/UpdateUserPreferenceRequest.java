@@ -6,11 +6,12 @@ import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.port.in.command.UpdateUserPreferenceCommand;
 
 public record UpdateUserPreferenceRequest(
+    String userBinanceApiKey,
     DisplayCurrencyType displayCurrency,
     LanguageType language,
     ThemeType theme
 ) {
     public UpdateUserPreferenceCommand toCommand() {
-        return new UpdateUserPreferenceCommand(displayCurrency, language, theme);
+        return new UpdateUserPreferenceCommand(userBinanceApiKey, displayCurrency, language, theme);
     }
 }

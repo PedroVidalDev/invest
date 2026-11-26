@@ -10,6 +10,7 @@ import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.UserPreference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,6 +34,9 @@ public class UserPreferenceJpaEntity {
 
     private String userId;
 
+    @Column(length = 1024)
+    private String userBinanceApiKey;
+
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DisplayCurrencyType displayCurrency;
@@ -48,10 +52,11 @@ public class UserPreferenceJpaEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static UserPreferenceJpaEntity from(UserPreference userPreference) {
+    public static UserPreferenceJpaEntity from(UserPreference userPreference, String encryptedBinanceApiKey) {
         return new UserPreferenceJpaEntity(
                 userPreference.getId(),
                 userPreference.getUserId(),
+                encryptedBinanceApiKey,
                 userPreference.getDisplayCurrency(),
                 userPreference.getLanguage(),
                 userPreference.getTheme(),
@@ -59,10 +64,11 @@ public class UserPreferenceJpaEntity {
                 userPreference.getUpdatedAt());
     }
 
-    public UserPreference toDomain() {
+    public UserPreference toDomain(String decryptedBinanceApiKey) {
         return new UserPreference(
                 id,
                 userId,
+                decryptedBinanceApiKey,
                 displayCurrency,
                 language,
                 theme,

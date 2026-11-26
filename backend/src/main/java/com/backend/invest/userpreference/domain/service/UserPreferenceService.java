@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.backend.invest.user.domain.port.in.UserQueryUseCase;
 import com.backend.invest.userpreference.domain.UserPreference;
+import com.backend.invest.userpreference.domain.exception.InvalidBinanceApiKeyLengthException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceAlreadyExistsException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceNotFoundException;
 import com.backend.invest.userpreference.domain.port.in.CreateUserPreferenceUseCase;
@@ -16,6 +17,8 @@ import com.backend.invest.userpreference.domain.port.out.UserPreferenceRepositor
 
 public class UserPreferenceService
         implements CreateUserPreferenceUseCase, UserPreferenceQueryUseCase, UpdateUserPreferenceUseCase {
+    public static final int MAX_BINANCE_API_KEY_LENGTH = 100;
+
     private final UserPreferenceRepositoryPort repository;
     private final UserQueryUseCase userQuery;
 
@@ -32,14 +35,15 @@ public class UserPreferenceService
             throw new UserPreferenceAlreadyExistsException(command.userId());
         }
 
+        String apiKey = validateAndNormalizeApiKey(command.userBinanceApiKey());
+
         UserPreference userPreference = new UserPreference(
                 null,
-
                 command.userId(),
+                apiKey,
                 command.displayCurrency(),
                 command.language(),
                 command.theme(),
-
                 LocalDateTime.now(),
                 LocalDateTime.now());
 
@@ -51,14 +55,17 @@ public class UserPreferenceService
         userQuery.findById(userId);
         UserPreference userPreference = findByUserId(userId);
 
+        String apiKey = command.userBinanceApiKey() == null
+                ? userPreference.getUserBinanceApiKey()
+                : validateAndNormalizeApiKey(command.userBinanceApiKey());
+
         UserPreference updatedUserPreference = new UserPreference(
                 userPreference.getId(),
                 userPreference.getUserId(),
-
+                apiKey,
                 command.displayCurrency(),
                 command.language(),
                 command.theme(),
-
                 userPreference.getCreatedAt(),
                 LocalDateTime.now());
 
@@ -79,5 +86,15 @@ public class UserPreferenceService
     @Override
     public List<UserPreference> findAll() {
         return repository.findAll();
+    }
+
+    private String validateAndNormalizeApiKey(String apiKey) {
+        if (apiKey == null || apiKey.isBlank()) {
+            return null;
+        }
+        if (apiKey.length() > MAX_BINANCE_API_KEY_LENGTH) {
+            throw new InvalidBinanceApiKeyLengthException(MAX_BINANCE_API_KEY_LENGTH);
+        }
+        return apiKey;
     }
 }

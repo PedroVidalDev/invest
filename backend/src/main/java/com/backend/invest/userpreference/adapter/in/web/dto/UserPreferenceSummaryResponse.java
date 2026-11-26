@@ -8,6 +8,7 @@ import com.backend.invest.userpreference.domain.UserPreference;
 public record UserPreferenceSummaryResponse(
         String id,
         String userId,
+        String userBinanceApiKey,
         DisplayCurrencyType displayCurrency,
         LanguageType language,
         ThemeType theme) {
@@ -16,6 +17,7 @@ public record UserPreferenceSummaryResponse(
         return new UserPreferenceSummaryResponse(
                 userPreference.getId(),
                 userPreference.getUserId(),
+                BinanceApiKeyMasker.mask(userPreference.getUserBinanceApiKey()),
                 userPreference.getDisplayCurrency(),
                 userPreference.getLanguage(),
                 userPreference.getTheme());

@@ -6,6 +6,7 @@ import com.backend.invest.userpreference.domain.ThemeType;
 
 public record CreateUserPreferenceCommand (
     String userId,
+    String userBinanceApiKey,
     DisplayCurrencyType displayCurrency,
     LanguageType language,
     ThemeType theme
