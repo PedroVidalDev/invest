@@ -1,7 +1,10 @@
 package com.backend.invest.email.domain;
 
 public class Email {
-
+  private EmailType type;
+  private String code;
+  private String to;
+  private String name;
 
   public Email(EmailType type, String code, String to, String name){
     this.type = type;
