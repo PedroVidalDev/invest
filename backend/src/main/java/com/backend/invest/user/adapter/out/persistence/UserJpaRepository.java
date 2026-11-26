@@ -27,6 +27,11 @@ public class UserJpaRepository implements UserRepositoryPort {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return springRepository.findByEmail(email).map(UserJpaEntity::toDomain);
+    }
+
+    @Override
     public List<User> findAll() {
         return springRepository.findAll().stream().map(UserJpaEntity::toDomain).toList();
     }

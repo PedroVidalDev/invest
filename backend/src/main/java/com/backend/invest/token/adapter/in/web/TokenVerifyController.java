@@ -20,7 +20,7 @@ public class TokenVerifyController {
 
     @PostMapping("/verify")
     public ResponseEntity<Void> verify(@RequestBody VerifyTokenRequest request) {
-        verifyToken.verifyToken(request.userId(), request.code());
+        verifyToken.verifyToken(request.userId(), request.service(), request.code());
 
         return ResponseEntity.noContent().build();
     }

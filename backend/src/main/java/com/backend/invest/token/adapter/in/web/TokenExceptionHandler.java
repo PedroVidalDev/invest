@@ -9,6 +9,7 @@ import com.backend.invest.token.domain.exception.InvalidTokenException;
 import com.backend.invest.token.domain.exception.TokenAttemptsExceededException;
 import com.backend.invest.token.domain.exception.TokenExpiredException;
 import com.backend.invest.token.domain.exception.TokenNotFoundException;
+import com.backend.invest.token.domain.exception.TokenResendCooldownException;
 import com.backend.invest.user.adapter.in.web.dto.ErrorResponse;
 
 @RestControllerAdvice
@@ -34,6 +35,12 @@ public class TokenExceptionHandler {
 
     @ExceptionHandler(TokenAttemptsExceededException.class)
     public ResponseEntity<ErrorResponse> handleAttemptsExceeded(TokenAttemptsExceededException e) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(TokenResendCooldownException.class)
+    public ResponseEntity<ErrorResponse> handleResendCooldown(TokenResendCooldownException e) {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .body(new ErrorResponse(e.getMessage()));
     }
