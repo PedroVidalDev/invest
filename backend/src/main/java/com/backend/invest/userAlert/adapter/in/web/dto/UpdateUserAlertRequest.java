@@ -2,8 +2,9 @@ package com.backend.invest.userAlert.adapter.in.web.dto;
 
 import com.backend.invest.userAlert.domain.port.in.command.UpdateUserAlertCommand;
 
-public record UpdateUserAlertRequest(Double percent, Double value, Boolean active) {
+public record UpdateUserAlertRequest(Double percent, Double value, Double autoConvertFromValue,
+    String autoConvertTo, Boolean active) {
   public UpdateUserAlertCommand toCommand() {
-    return new UpdateUserAlertCommand(percent, value, active);
+    return new UpdateUserAlertCommand(percent, value, autoConvertFromValue, autoConvertTo, active);
   }
 }

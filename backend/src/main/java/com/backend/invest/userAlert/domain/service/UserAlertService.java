@@ -34,8 +34,9 @@ public class UserAlertService implements CreateUserAlertUseCase, UserAlertQueryU
     }
 
     UserAlert userAlert = new UserAlert(null, command.userId(), command.instrumentId(),
-        command.percent(), command.value(), command.active() != null ? command.active() : true,
-        LocalDateTime.now(), LocalDateTime.now());
+        command.percent(), command.value(), command.autoConvertFromValue(), command.autoConvertTo(),
+        command.active() != null ? command.active() : true, LocalDateTime.now(),
+        LocalDateTime.now());
 
     return repository.save(userAlert);
   }
@@ -62,6 +63,7 @@ public class UserAlertService implements CreateUserAlertUseCase, UserAlertQueryU
 
     UserAlert updatedUserAlert = new UserAlert(userAlert.getId(), userAlert.getUserId(),
         userAlert.getInstrumentId(), command.percent(), command.value(),
+        command.autoConvertFromValue(), command.autoConvertTo(),
         command.active() != null ? command.active() : userAlert.getActive(),
         userAlert.getCreatedAt(), LocalDateTime.now());
 

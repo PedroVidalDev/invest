@@ -27,6 +27,8 @@ public class UserAlertJpaEntity {
   private String instrumentId;
   private Double percent;
   private Double value;
+  private Double autoConvertFromValue;
+  private String autoConvertTo;
   private Boolean active;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
@@ -34,10 +36,12 @@ public class UserAlertJpaEntity {
   public static UserAlertJpaEntity from(UserAlert userAlert) {
     return new UserAlertJpaEntity(userAlert.getId(), userAlert.getUserId(),
         userAlert.getInstrumentId(), userAlert.getPercent(), userAlert.getValue(),
-        userAlert.getActive(), userAlert.getCreatedAt(), userAlert.getUpdatedAt());
+        userAlert.getAutoConvertFromValue(), userAlert.getAutoConvertTo(), userAlert.getActive(),
+        userAlert.getCreatedAt(), userAlert.getUpdatedAt());
   }
 
   public UserAlert toDomain() {
-    return new UserAlert(id, userId, instrumentId, percent, value, active, createdAt, updatedAt);
+    return new UserAlert(id, userId, instrumentId, percent, value, autoConvertFromValue,
+        autoConvertTo, active, createdAt, updatedAt);
   }
 }
