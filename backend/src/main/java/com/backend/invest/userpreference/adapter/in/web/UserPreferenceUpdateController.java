@@ -1,7 +1,7 @@
 package com.backend.invest.userpreference.adapter.in.web;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +20,9 @@ public class UserPreferenceUpdateController {
         this.updateUserPreference = updateUserPreference;
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/")
     public ResponseEntity<UserPreferenceResponse> update(
-        @PathVariable String userId,
+        @AuthenticationPrincipal String userId,
         @RequestBody UpdateUserPreferenceRequest request
     ) {
         return ResponseEntity.ok(

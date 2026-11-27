@@ -1,6 +1,7 @@
 package com.backend.invest.userinstrument.adapter.in.web;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,8 @@ public class UserInstrumentDeleteController {
         this.deleteUserInstrument = deleteUserInstrument;
     }
 
-    @DeleteMapping("/{userId}/{instrumentId}")
-    public ResponseEntity<Void> delete(@PathVariable String userId, @PathVariable String instrumentId) {
+    @DeleteMapping("/{instrumentId}")
+    public ResponseEntity<Void> delete(@PathVariable String instrumentId, @AuthenticationPrincipal String userId) {
         deleteUserInstrument.delete(userId, instrumentId);
 
         return ResponseEntity.noContent().build();
