@@ -76,8 +76,11 @@ public class UserAlertMonitorService implements CheckUserAlertsUseCase {
   }
 
   private boolean matchesCondition(UserAlert alert, Double currentPrice) {
-    if (alert.getValue() != null) {
-      return currentPrice <= alert.getValue();
+    if (alert.getValue() != null && alert.getCondition() != null) {
+      return switch (alert.getCondition()) {
+        case ABOVE -> currentPrice >= alert.getValue();
+        case BELOW -> currentPrice <= alert.getValue();
+      };
     }
 
     // TODO: evaluate alert.getPercent() once a baseline/reference price is defined.
@@ -86,7 +89,7 @@ public class UserAlertMonitorService implements CheckUserAlertsUseCase {
 
   private void deactivateAlert(UserAlert alert) {
     UserAlert deactivated = new UserAlert(alert.getId(), alert.getUserId(), alert.getInstrumentId(),
-        alert.getPercent(), alert.getValue(), alert.getAutoConvertFromValue(),
+        alert.getPercent(), alert.getValue(), alert.getCondition(), alert.getAutoConvertFromValue(),
         alert.getAutoConvertTo(), false, alert.getCreatedAt(), LocalDateTime.now());
     alertRepository.save(deactivated);
   }

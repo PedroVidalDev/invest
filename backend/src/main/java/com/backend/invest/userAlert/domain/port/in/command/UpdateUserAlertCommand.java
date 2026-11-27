@@ -1,5 +1,7 @@
 package com.backend.invest.userAlert.domain.port.in.command;
 
-public record UpdateUserAlertCommand(Double percent, Double value, Double autoConvertFromValue,
-    String autoConvertTo, Boolean active) {
+import com.backend.invest.userAlert.domain.AlertCondition;
+
+public record UpdateUserAlertCommand(Double percent, Double value, AlertCondition condition,
+    Double autoConvertFromValue, String autoConvertTo, Boolean active) {
 }

@@ -8,6 +8,7 @@ public class UserAlert {
   private String instrumentId;
   private Double percent;
   private Double value;
+  private AlertCondition condition;
   private Double autoConvertFromValue;
   private String autoConvertTo;
   private Boolean active;
@@ -15,13 +16,14 @@ public class UserAlert {
   private LocalDateTime updatedAt;
 
   public UserAlert(String id, String userId, String instrumentId, Double percent, Double value,
-      Double autoConvertFromValue, String autoConvertTo, Boolean active, LocalDateTime createdAt,
-      LocalDateTime updatedAt) {
+      AlertCondition condition, Double autoConvertFromValue, String autoConvertTo, Boolean active,
+      LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
     this.userId = userId;
     this.instrumentId = instrumentId;
     this.percent = percent;
     this.value = value;
+    this.condition = condition;
     this.autoConvertFromValue = autoConvertFromValue;
     this.autoConvertTo = autoConvertTo;
     this.active = active;
@@ -47,6 +49,10 @@ public class UserAlert {
 
   public Double getValue() {
     return this.value;
+  }
+
+  public AlertCondition getCondition() {
+    return this.condition;
   }
 
   public Double getAutoConvertFromValue() {
