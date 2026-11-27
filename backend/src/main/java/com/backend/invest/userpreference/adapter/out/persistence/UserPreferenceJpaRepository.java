@@ -8,34 +8,38 @@ import com.backend.invest.userpreference.domain.UserPreference;
 import com.backend.invest.userpreference.domain.port.out.UserPreferenceRepositoryPort;
 
 @Repository
-public class UserPreferenceJpaRepository implements UserPreferenceRepositoryPort{
-    private final UserPreferenceJpaSpringRepository springRepository;
-    private final BinanceApiKeyEncryptor apiKeyEncryptor;
+public class UserPreferenceJpaRepository implements UserPreferenceRepositoryPort {
+  private final UserPreferenceJpaSpringRepository springRepository;
+  private final BinanceApiKeyEncryptor apiKeyEncryptor;
 
-    public UserPreferenceJpaRepository (UserPreferenceJpaSpringRepository springRepository, BinanceApiKeyEncryptor apiKeyEncryptor) {
-        this.springRepository = springRepository;
-        this.apiKeyEncryptor = apiKeyEncryptor;
-    }
+  public UserPreferenceJpaRepository(UserPreferenceJpaSpringRepository springRepository,
+      BinanceApiKeyEncryptor apiKeyEncryptor) {
+    this.springRepository = springRepository;
+    this.apiKeyEncryptor = apiKeyEncryptor;
+  }
 
-    @Override
-    public UserPreference save(UserPreference userPreference) {
-        String encryptedApiKey = apiKeyEncryptor.encrypt(userPreference.getUserBinanceApiKey());
-        UserPreferenceJpaEntity saved = springRepository.save(UserPreferenceJpaEntity.from(userPreference, encryptedApiKey));
-        return toDomain(saved);
-    }
+  @Override
+  public UserPreference save(UserPreference userPreference) {
+    String encryptedApiKey = apiKeyEncryptor.encrypt(userPreference.getUserBinanceApiKey());
+    String encryptedApiSecret = apiKeyEncryptor.encrypt(userPreference.getUserBinanceApiSecret());
+    UserPreferenceJpaEntity saved = springRepository
+        .save(UserPreferenceJpaEntity.from(userPreference, encryptedApiKey, encryptedApiSecret));
+    return toDomain(saved);
+  }
 
-    @Override
-    public UserPreference findByUserId(String userId) {
-        return springRepository.findByUserId(userId).map(this::toDomain).orElse(null);
-    }
+  @Override
+  public UserPreference findByUserId(String userId) {
+    return springRepository.findByUserId(userId).map(this::toDomain).orElse(null);
+  }
 
-    @Override
-    public List<UserPreference> findAll() {
-        return springRepository.findAll().stream().map(this::toDomain).toList();
-    }
+  @Override
+  public List<UserPreference> findAll() {
+    return springRepository.findAll().stream().map(this::toDomain).toList();
+  }
 
-    private UserPreference toDomain(UserPreferenceJpaEntity entity) {
-        String decryptedApiKey = apiKeyEncryptor.decrypt(entity.getUserBinanceApiKey());
-        return entity.toDomain(decryptedApiKey);
-    }
+  private UserPreference toDomain(UserPreferenceJpaEntity entity) {
+    String decryptedApiKey = apiKeyEncryptor.decrypt(entity.getUserBinanceApiKey());
+    String decryptedApiSecret = apiKeyEncryptor.decrypt(entity.getUserBinanceApiSecret());
+    return entity.toDomain(decryptedApiKey, decryptedApiSecret);
+  }
 }

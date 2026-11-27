@@ -5,21 +5,15 @@ import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.UserPreference;
 
-public record UserPreferenceResponse(
-        String id,
-        String userId,
-        String userBinanceApiKey,
-        DisplayCurrencyType displayCurrency,
-        LanguageType language,
-        ThemeType theme) {
+public record UserPreferenceResponse(String id, String userId, String userBinanceApiKey,
+    String userBinanceApiSecret, DisplayCurrencyType displayCurrency, LanguageType language,
+    ThemeType theme) {
 
-    public static UserPreferenceResponse from(UserPreference userPreference) {
-        return new UserPreferenceResponse(
-                userPreference.getId(),
-                userPreference.getUserId(),
-                BinanceApiKeyMasker.mask(userPreference.getUserBinanceApiKey()),
-                userPreference.getDisplayCurrency(),
-                userPreference.getLanguage(),
-                userPreference.getTheme());
-    }
+  public static UserPreferenceResponse from(UserPreference userPreference) {
+    return new UserPreferenceResponse(userPreference.getId(), userPreference.getUserId(),
+        BinanceApiKeyMasker.mask(userPreference.getUserBinanceApiKey()),
+        BinanceApiKeyMasker.mask(userPreference.getUserBinanceApiSecret()),
+        userPreference.getDisplayCurrency(), userPreference.getLanguage(),
+        userPreference.getTheme());
+  }
 }

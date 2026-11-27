@@ -28,51 +28,43 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPreferenceJpaEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    private String userId;
+  private String userId;
 
-    @Column(length = 1024)
-    private String userBinanceApiKey;
+  @Column(length = 1024)
+  private String userBinanceApiKey;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private DisplayCurrencyType displayCurrency;
+  @Column(length = 1024)
+  private String userBinanceApiSecret;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private LanguageType language;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private DisplayCurrencyType displayCurrency;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private ThemeType theme;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private LanguageType language;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private ThemeType theme;
 
-    public static UserPreferenceJpaEntity from(UserPreference userPreference, String encryptedBinanceApiKey) {
-        return new UserPreferenceJpaEntity(
-                userPreference.getId(),
-                userPreference.getUserId(),
-                encryptedBinanceApiKey,
-                userPreference.getDisplayCurrency(),
-                userPreference.getLanguage(),
-                userPreference.getTheme(),
-                userPreference.getCreatedAt(),
-                userPreference.getUpdatedAt());
-    }
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 
-    public UserPreference toDomain(String decryptedBinanceApiKey) {
-        return new UserPreference(
-                id,
-                userId,
-                decryptedBinanceApiKey,
-                displayCurrency,
-                language,
-                theme,
-                createdAt,
-                updatedAt);
-    }
+  public static UserPreferenceJpaEntity from(UserPreference userPreference,
+      String encryptedBinanceApiKey, String encryptedBinanceApiSecret) {
+    return new UserPreferenceJpaEntity(userPreference.getId(), userPreference.getUserId(),
+        encryptedBinanceApiKey, encryptedBinanceApiSecret, userPreference.getDisplayCurrency(),
+        userPreference.getLanguage(), userPreference.getTheme(), userPreference.getCreatedAt(),
+        userPreference.getUpdatedAt());
+  }
+
+  public UserPreference toDomain(String decryptedBinanceApiKey, String decryptedBinanceApiSecret) {
+    return new UserPreference(id, userId, decryptedBinanceApiKey, decryptedBinanceApiSecret,
+        displayCurrency, language, theme, createdAt, updatedAt);
+  }
 }
