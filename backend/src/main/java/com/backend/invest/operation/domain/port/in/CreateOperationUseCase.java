@@ -4,6 +4,6 @@ import com.backend.invest.operation.domain.Operation;
 import com.backend.invest.operation.domain.port.in.command.CreateOperationCommand;
 
 public interface CreateOperationUseCase {
-  Operation create(CreateOperationCommand command);
+  Operation create(String userId, CreateOperationCommand command);
 }
 

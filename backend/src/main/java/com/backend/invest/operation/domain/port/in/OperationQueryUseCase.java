@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface OperationQueryUseCase {
   Optional<Operation> findById(String id);
 
-  List<Operation> findAll();
+  List<Operation> findByUserId(String userId);
 }

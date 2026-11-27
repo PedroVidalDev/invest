@@ -5,6 +5,7 @@ import com.backend.invest.operation.adapter.in.web.dto.OperationSummaryResponse;
 import com.backend.invest.operation.domain.port.in.OperationQueryUseCase;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +30,10 @@ public class OperationQueryController {
   }
 
   @GetMapping
-  public ResponseEntity<List<OperationSummaryResponse>> list() {
+  public ResponseEntity<List<OperationSummaryResponse>> list(
+      @AuthenticationPrincipal String userId) {
     List<OperationSummaryResponse> body =
-        operationQuery.findAll().stream().map(OperationSummaryResponse::from).toList();
+        operationQuery.findByUserId(userId).stream().map(OperationSummaryResponse::from).toList();
     return ResponseEntity.ok(body);
   }
 }

@@ -28,7 +28,8 @@ public class OperationJpaRepository implements OperationRepositoryPort {
   }
 
   @Override
-  public List<Operation> findAll() {
-    return springRepository.findAll().stream().map(OperationJpaEntity::toDomain).toList();
+  public List<Operation> findByUserId(String userId) {
+    return springRepository.findByUserId(userId).stream().map(OperationJpaEntity::toDomain)
+        .toList();
   }
 }

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class Operation {
 
   private final String id;
+  private final String userId;
   private final String instrumentId;
   private final OperationType type;
   private final Double assetValue;
@@ -14,10 +15,11 @@ public class Operation {
   private final LocalDateTime createdAt;
   private final LocalDateTime updatedAt;
 
-  public Operation(String id, String instrumentId, OperationType type, Double assetValue,
-      Double quantity, Integer annualRate, LocalDateTime executedAt, LocalDateTime createdAt,
-      LocalDateTime updatedAt) {
+  public Operation(String id, String userId, String instrumentId, OperationType type,
+      Double assetValue, Double quantity, Integer annualRate, LocalDateTime executedAt,
+      LocalDateTime createdAt, LocalDateTime updatedAt) {
     this.id = id;
+    this.userId = userId;
     this.instrumentId = instrumentId;
     this.type = type;
     this.assetValue = assetValue;
@@ -30,6 +32,10 @@ public class Operation {
 
   public String getId() {
     return id;
+  }
+
+  public String getUserId() {
+    return userId;
   }
 
   public String getInstrumentId() {

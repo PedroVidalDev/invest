@@ -19,8 +19,8 @@ public class OperationService implements CreateOperationUseCase, OperationQueryU
   }
 
   @Override
-  public Operation create(CreateOperationCommand command) {
-    Operation operation = new Operation(null, command.instrumentId(), command.type(),
+  public Operation create(String userId, CreateOperationCommand command) {
+    Operation operation = new Operation(null, userId, command.instrumentId(), command.type(),
         command.assetValue(), command.quantity(), command.annualRate(), null, LocalDateTime.now(),
         LocalDateTime.now());
 
@@ -33,7 +33,7 @@ public class OperationService implements CreateOperationUseCase, OperationQueryU
   }
 
   @Override
-  public List<Operation> findAll() {
-    return repository.findAll();
+  public List<Operation> findByUserId(String userId) {
+    return repository.findByUserId(userId);
   }
 }

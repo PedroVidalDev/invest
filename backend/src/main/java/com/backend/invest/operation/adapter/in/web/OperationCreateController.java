@@ -5,6 +5,7 @@ import com.backend.invest.operation.adapter.in.web.dto.OperationResponse;
 import com.backend.invest.operation.domain.port.in.CreateOperationUseCase;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,10 @@ public class OperationCreateController {
   }
 
   @PostMapping
-  public ResponseEntity<OperationResponse> create(@RequestBody CreateOperationRequest request) {
-    return ResponseEntity.ok(OperationResponse.from(createOperation.create(request.toCommand())));
+  public ResponseEntity<OperationResponse> create(
+      @AuthenticationPrincipal String userId,
+      @RequestBody CreateOperationRequest request) {
+    return ResponseEntity.ok(
+        OperationResponse.from(createOperation.create(userId, request.toCommand())));
   }
 }
