@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.backend.invest.binance.domain.CryptoConvertResult;
 import com.backend.invest.binance.domain.CryptoPrice;
 import com.backend.invest.binance.domain.port.in.ConvertCryptoUseCase;
@@ -26,8 +23,6 @@ import com.backend.invest.userpreference.domain.exception.UserPreferenceNotFound
 import com.backend.invest.userpreference.domain.port.in.UserPreferenceQueryUseCase;
 
 public class UserAlertMonitorService implements CheckUserAlertsUseCase {
-  private static final Logger log = LoggerFactory.getLogger(UserAlertMonitorService.class);
-
   private final UserAlertRepositoryPort alertRepository;
   private final InstrumentQueryUseCase instrumentQuery;
   private final GetCryptoPricesUseCase cryptoPrices;
@@ -56,7 +51,7 @@ public class UserAlertMonitorService implements CheckUserAlertsUseCase {
       try {
         processAlert(alert, priceCache);
       } catch (Exception e) {
-        log.error("Failed to check user alert {}", alert.getId(), e);
+        System.out.println("Failed to check user alert" +  alert.getId() + e);
       }
     }
   }
@@ -108,17 +103,14 @@ public class UserAlertMonitorService implements CheckUserAlertsUseCase {
     }
 
     if (apiSecret == null || apiSecret.isBlank()) {
-      log.warn("Skipping Binance auto-convert for alert {}: userBinanceApiSecret is not configured",
-          alert.getId());
+      System.out.println("Skipping Binance auto-convert for alert {}: userBinanceApiSecret is not configured " + alert.getId());
       return;
     }
 
     ConvertCryptoCommand command = new ConvertCryptoCommand(apiKey, apiSecret,
         instrument.getSymbol(), alert.getAutoConvertTo(), alert.getAutoConvertFromValue());
     CryptoConvertResult result = convertCrypto.convert(command);
-    log.info("Executed Binance convert for alert {}: orderId={}, status={}, {} {} -> {} {}",
-        alert.getId(), result.orderId(), result.orderStatus(), result.fromAmount(),
-        result.fromAsset(), result.toAmount(), result.toAsset());
+    System.out.println("Executed Binance convert for alert " + alert.getId() + " and result " + result.toString() );
   }
 
   private Optional<UserPreference> findUserPreference(String userId) {
