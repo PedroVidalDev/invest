@@ -3,6 +3,7 @@ package com.backend.invest.operation.adapter.out.persistence;
 import com.backend.invest.instrument.adapter.out.persistence.InstrumentJpaEntity;
 import com.backend.invest.operation.domain.Operation;
 import com.backend.invest.operation.domain.OperationType;
+import com.backend.invest.user.adapter.out.persistence.UserJpaEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -35,6 +36,13 @@ public class OperationJpaEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
 
+  @Column(name = "user_id")
+  private String userId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  private UserJpaEntity user;
+
   @Column(name = "instrument_id")
   private String instrumentId;
 
@@ -56,14 +64,14 @@ public class OperationJpaEntity {
   private LocalDateTime updatedAt;
 
   public static OperationJpaEntity from(Operation operation) {
-    return new OperationJpaEntity(operation.getId(), operation.getInstrumentId(), null,
-        operation.getType(), operation.getAssetValue(), operation.getQuantity(),
-        operation.getAnnualRate(), operation.getExecutedAt(), operation.getCreatedAt(),
-        operation.getUpdatedAt());
+    return new OperationJpaEntity(operation.getId(), operation.getUserId(), null,
+        operation.getInstrumentId(), null, operation.getType(), operation.getAssetValue(),
+        operation.getQuantity(), operation.getAnnualRate(), operation.getExecutedAt(),
+        operation.getCreatedAt(), operation.getUpdatedAt());
   }
 
   public Operation toDomain() {
-    return new Operation(id, instrumentId, type, assetValue, quantity, annualRate, executedAt,
-        createdAt, updatedAt);
+    return new Operation(id, userId, instrumentId, type, assetValue, quantity, annualRate,
+        executedAt, createdAt, updatedAt);
   }
 }

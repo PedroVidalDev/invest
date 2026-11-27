@@ -5,6 +5,12 @@ import com.backend.invest.operation.domain.OperationType;
 
 import java.time.LocalDateTime;
 
-public record OperationResponse(String id,String instrumentId,OperationType type,Double assetValue,Double quantity,Integer annualRate,LocalDateTime executedAt){
+public record OperationResponse(String id, String userId, String instrumentId, OperationType type,
+    Double assetValue, Double quantity, Integer annualRate, LocalDateTime executedAt) {
 
-public static OperationResponse from(Operation operation){return new OperationResponse(operation.getId(),operation.getInstrumentId(),operation.getType(),operation.getAssetValue(),operation.getQuantity(),operation.getAnnualRate(),operation.getExecutedAt());}}
+  public static OperationResponse from(Operation operation) {
+    return new OperationResponse(operation.getId(), operation.getUserId(),
+        operation.getInstrumentId(), operation.getType(), operation.getAssetValue(),
+        operation.getQuantity(), operation.getAnnualRate(), operation.getExecutedAt());
+  }
+}

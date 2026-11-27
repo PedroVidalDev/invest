@@ -2,14 +2,15 @@ package com.backend.invest.user.adapter.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import com.backend.invest.auth.domain.port.out.PasswordEncoderPort;
 import com.backend.invest.user.domain.port.out.UserRepositoryPort;
 import com.backend.invest.user.domain.service.UserService;
 
-@Configuration 
+@Configuration
 public class UserBeanConfig {
-    @Bean
-    public UserService userService(UserRepositoryPort repositoryPort) {
-        return new UserService(repositoryPort);
-    }
+  @Bean
+  public UserService userService(UserRepositoryPort repositoryPort,
+      PasswordEncoderPort passwordEncoder) {
+    return new UserService(repositoryPort, passwordEncoder);
+  }
 }

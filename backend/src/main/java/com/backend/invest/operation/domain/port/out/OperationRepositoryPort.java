@@ -10,5 +10,5 @@ public interface OperationRepositoryPort {
 
   Optional<Operation> findById(String id);
 
-  List<Operation> findAll();
+  List<Operation> findByUserId(String userId);
 }

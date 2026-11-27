@@ -2,7 +2,7 @@ package com.backend.invest.user.domain.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+import com.backend.invest.auth.domain.port.out.PasswordEncoderPort;
 import com.backend.invest.user.domain.CategoryType;
 import com.backend.invest.user.domain.User;
 import com.backend.invest.user.domain.exception.UserAlreadyExistsException;
@@ -17,98 +17,80 @@ import com.backend.invest.user.domain.port.in.command.CreateUserCommand;
 import com.backend.invest.user.domain.port.in.command.UpdateUserCommand;
 import com.backend.invest.user.domain.port.out.UserRepositoryPort;
 
-public class UserService
-        implements CreateUserUseCase, UserQueryUseCase, UpdateUserUseCase, DeleteUserUseCase, ToggleActiveUseCase {
-    private final UserRepositoryPort repository;
+public class UserService implements CreateUserUseCase, UserQueryUseCase, UpdateUserUseCase,
+    DeleteUserUseCase, ToggleActiveUseCase {
+  private final UserRepositoryPort repository;
+  private final PasswordEncoderPort passwordEncoder;
 
-    public UserService(UserRepositoryPort repository) {
-        this.repository = repository;
+  public UserService(UserRepositoryPort repository, PasswordEncoderPort encoder) {
+    this.passwordEncoder = encoder;
+    this.repository = repository;
+  }
+
+  public User getUserOrThrow(String id) {
+    return repository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+  }
+
+  @Override
+  public User create(CreateUserCommand command) {
+    if (repository.existsByEmail(command.email())) {
+      throw new UserAlreadyExistsException(command.email());
     }
 
-    public User getUserOrThrow(String id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    User user = new User(null, command.name(), command.email(),
+        passwordEncoder.encode(command.password()), command.photo(), true, CategoryType.USER, null,
+        LocalDateTime.now(), LocalDateTime.now());
+
+    return repository.save(user);
+  }
+
+  @Override
+  public User findById(String id) {
+    return getUserOrThrow(id);
+  }
+
+  @Override
+  public User findByEmail(String email) {
+    return repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+  }
+
+  @Override
+  public List<User> findAll() {
+    return repository.findAll();
+  }
+
+  @Override
+  public User update(String id, UpdateUserCommand command) {
+    User user = getUserOrThrow(id);
+
+    if (!user.getActive()) {
+      throw new UserInactiveException(id);
     }
 
-    @Override
-    public User create(CreateUserCommand command) {
-        if (repository.existsByEmail(command.email())) {
-            throw new UserAlreadyExistsException(command.email());
-        }
-
-        User user = new User(
-            null, 
-
-            command.name(), 
-            command.email(), 
-            command.password(), 
-            command.photo(), 
-            
-            true, 
-            CategoryType.USER,
-            null, 
-            LocalDateTime.now(), 
-            LocalDateTime.now()
-        );
-
-        return repository.save(user);
+    if (!user.getEmail().equals(command.email()) && repository.existsByEmail(command.email())) {
+      throw new UserAlreadyExistsException(command.email());
     }
 
-    @Override
-    public User findById(String id) {
-        return getUserOrThrow(id);
-    }
+    User updatedUser = new User(user.getId(), command.name(), command.email(), user.getPassword(),
+        command.photo(), user.getActive(), user.getCategory(), user.getVerifiedAt(),
+        user.getCreatedAt(), LocalDateTime.now());
 
-    @Override
-    public List<User> findAll() {
-        return repository.findAll();
-    }
+    return repository.save(updatedUser);
+  }
 
-    @Override
-    public User update(String id, UpdateUserCommand command) {
-        User user = getUserOrThrow(id);
+  @Override
+  public User toggleActive(String id) {
+    User user = getUserOrThrow(id);
 
-        if (!user.getActive()) {
-            throw new UserInactiveException(id);
-        }
+    user.toggleActive();
 
-        if (!user.getEmail().equals(command.email()) && repository.existsByEmail(command.email())) {
-            throw new UserAlreadyExistsException(command.email());
-        }
+    return repository.save(user);
+  }
 
-        User updatedUser = new User(
-                user.getId(),
+  @Override
+  public void delete(String id) {
+    getUserOrThrow(id);
 
-                command.name(),
-                command.email(),
-
-                user.getPassword(),
-
-                command.photo(),
-                
-                user.getActive(),
-                user.getCategory(),
-                user.getVerifiedAt(),
-                user.getCreatedAt(),
-                LocalDateTime.now()
-            );
-
-        return repository.save(updatedUser);
-    }
-
-    @Override
-    public User toggleActive(String id) {
-        User user = getUserOrThrow(id);
-
-        user.toggleActive();
-
-        return repository.save(user);
-    }
-
-    @Override
-    public void delete(String id) {
-        getUserOrThrow(id);
-
-        repository.delete(id);
-    }
+    repository.delete(id);
+  }
 }

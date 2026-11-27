@@ -3,8 +3,8 @@ package com.backend.invest.userinstrument.adapter.in.web;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +20,8 @@ public class UserInstrumentQueryController {
         this.userInstrumentQuery = userInstrumentQuery;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<UserInstrumentSummaryResponse>> list(@PathVariable String userId) {
+    @GetMapping("/")
+    public ResponseEntity<List<UserInstrumentSummaryResponse>> list(@AuthenticationPrincipal String userId) {
         List<UserInstrumentSummaryResponse> body = userInstrumentQuery.findByUserId(userId)
                 .stream()
                 .map(UserInstrumentSummaryResponse::from)
