@@ -4,8 +4,6 @@ import com.backend.invest.userpreference.domain.DisplayCurrencyType;
 import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 
-public record UpdateUserPreferenceCommand(
-    DisplayCurrencyType displayCurrency,
-    LanguageType language,
-    ThemeType theme
-) {}
+public record UpdateUserPreferenceCommand(String userBinanceApiKey, String userBinanceApiSecret,
+    DisplayCurrencyType displayCurrency, LanguageType language, ThemeType theme) {
+}

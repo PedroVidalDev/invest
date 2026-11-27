@@ -10,6 +10,7 @@ import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.UserPreference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -27,46 +28,43 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPreferenceJpaEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private String id;
 
-    private String userId;
+  private String userId;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private DisplayCurrencyType displayCurrency;
+  @Column(length = 1024)
+  private String userBinanceApiKey;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private LanguageType language;
+  @Column(length = 1024)
+  private String userBinanceApiSecret;
 
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private ThemeType theme;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private DisplayCurrencyType displayCurrency;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private LanguageType language;
 
-    public static UserPreferenceJpaEntity from(UserPreference userPreference) {
-        return new UserPreferenceJpaEntity(
-                userPreference.getId(),
-                userPreference.getUserId(),
-                userPreference.getDisplayCurrency(),
-                userPreference.getLanguage(),
-                userPreference.getTheme(),
-                userPreference.getCreatedAt(),
-                userPreference.getUpdatedAt());
-    }
+  @Enumerated(EnumType.STRING)
+  @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+  private ThemeType theme;
 
-    public UserPreference toDomain() {
-        return new UserPreference(
-                id,
-                userId,
-                displayCurrency,
-                language,
-                theme,
-                createdAt,
-                updatedAt);
-    }
+  private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
+
+  public static UserPreferenceJpaEntity from(UserPreference userPreference,
+      String encryptedBinanceApiKey, String encryptedBinanceApiSecret) {
+    return new UserPreferenceJpaEntity(userPreference.getId(), userPreference.getUserId(),
+        encryptedBinanceApiKey, encryptedBinanceApiSecret, userPreference.getDisplayCurrency(),
+        userPreference.getLanguage(), userPreference.getTheme(), userPreference.getCreatedAt(),
+        userPreference.getUpdatedAt());
+  }
+
+  public UserPreference toDomain(String decryptedBinanceApiKey, String decryptedBinanceApiSecret) {
+    return new UserPreference(id, userId, decryptedBinanceApiKey, decryptedBinanceApiSecret,
+        displayCurrency, language, theme, createdAt, updatedAt);
+  }
 }

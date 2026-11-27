@@ -5,13 +5,11 @@ import com.backend.invest.userpreference.domain.LanguageType;
 import com.backend.invest.userpreference.domain.ThemeType;
 import com.backend.invest.userpreference.domain.port.in.command.CreateUserPreferenceCommand;
 
-public record CreateUserPreferenceRequest(
-    String userId,
-    DisplayCurrencyType displayCurrency,
-    LanguageType language,
-    ThemeType theme
-) {
-    public CreateUserPreferenceCommand toCommand() {
-        return new CreateUserPreferenceCommand(userId, displayCurrency, language, theme);
-    }
+public record CreateUserPreferenceRequest(String userId, String userBinanceApiKey,
+    String userBinanceApiSecret, DisplayCurrencyType displayCurrency, LanguageType language,
+    ThemeType theme) {
+  public CreateUserPreferenceCommand toCommand() {
+    return new CreateUserPreferenceCommand(userId, userBinanceApiKey, userBinanceApiSecret,
+        displayCurrency, language, theme);
+  }
 }

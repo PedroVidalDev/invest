@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.backend.invest.user.adapter.in.web.dto.ErrorResponse;
+import com.backend.invest.userpreference.domain.exception.InvalidBinanceApiKeyLengthException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceAlreadyExistsException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceNotFoundException;
 
@@ -21,6 +22,12 @@ public class UserPreferenceExceptionHandler {
     @ExceptionHandler(UserPreferenceAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleAlreadyExists(UserPreferenceAlreadyExistsException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(InvalidBinanceApiKeyLengthException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBinanceApiKeyLength(InvalidBinanceApiKeyLengthException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorResponse(e.getMessage()));
     }
 }

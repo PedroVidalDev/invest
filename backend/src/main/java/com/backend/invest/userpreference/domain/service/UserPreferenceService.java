@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.backend.invest.user.domain.port.in.UserQueryUseCase;
 import com.backend.invest.userpreference.domain.UserPreference;
+import com.backend.invest.userpreference.domain.exception.InvalidBinanceApiKeyLengthException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceAlreadyExistsException;
 import com.backend.invest.userpreference.domain.exception.UserPreferenceNotFoundException;
 import com.backend.invest.userpreference.domain.port.in.CreateUserPreferenceUseCase;
@@ -14,70 +15,79 @@ import com.backend.invest.userpreference.domain.port.in.command.CreateUserPrefer
 import com.backend.invest.userpreference.domain.port.in.command.UpdateUserPreferenceCommand;
 import com.backend.invest.userpreference.domain.port.out.UserPreferenceRepositoryPort;
 
-public class UserPreferenceService
-        implements CreateUserPreferenceUseCase, UserPreferenceQueryUseCase, UpdateUserPreferenceUseCase {
-    private final UserPreferenceRepositoryPort repository;
-    private final UserQueryUseCase userQuery;
+public class UserPreferenceService implements CreateUserPreferenceUseCase,
+    UserPreferenceQueryUseCase, UpdateUserPreferenceUseCase {
+  public static final int MAX_BINANCE_API_KEY_LENGTH = 100;
 
-    public UserPreferenceService(UserPreferenceRepositoryPort repository, UserQueryUseCase userQuery) {
-        this.repository = repository;
-        this.userQuery = userQuery;
+  private final UserPreferenceRepositoryPort repository;
+  private final UserQueryUseCase userQuery;
+
+  public UserPreferenceService(UserPreferenceRepositoryPort repository,
+      UserQueryUseCase userQuery) {
+    this.repository = repository;
+    this.userQuery = userQuery;
+  }
+
+  @Override
+  public UserPreference create(CreateUserPreferenceCommand command) {
+    userQuery.findById(command.userId());
+
+    if (repository.findByUserId(command.userId()) != null) {
+      throw new UserPreferenceAlreadyExistsException(command.userId());
     }
 
-    @Override
-    public UserPreference create(CreateUserPreferenceCommand command) {
-        userQuery.findById(command.userId());
+    String apiKey = validateAndNormalizeApiKey(command.userBinanceApiKey());
+    String apiSecret = validateAndNormalizeApiKey(command.userBinanceApiSecret());
 
-        if (repository.findByUserId(command.userId()) != null) {
-            throw new UserPreferenceAlreadyExistsException(command.userId());
-        }
+    UserPreference userPreference =
+        new UserPreference(null, command.userId(), apiKey, apiSecret, command.displayCurrency(),
+            command.language(), command.theme(), LocalDateTime.now(), LocalDateTime.now());
 
-        UserPreference userPreference = new UserPreference(
-                null,
+    return repository.save(userPreference);
+  }
 
-                command.userId(),
-                command.displayCurrency(),
-                command.language(),
-                command.theme(),
+  @Override
+  public UserPreference update(String userId, UpdateUserPreferenceCommand command) {
+    userQuery.findById(userId);
+    UserPreference userPreference = findByUserId(userId);
 
-                LocalDateTime.now(),
-                LocalDateTime.now());
+    String apiKey = command.userBinanceApiKey() == null ? userPreference.getUserBinanceApiKey()
+        : validateAndNormalizeApiKey(command.userBinanceApiKey());
 
-        return repository.save(userPreference);
+    String apiSecret =
+        command.userBinanceApiSecret() == null ? userPreference.getUserBinanceApiSecret()
+            : validateAndNormalizeApiKey(command.userBinanceApiSecret());
+
+    UserPreference updatedUserPreference = new UserPreference(userPreference.getId(),
+        userPreference.getUserId(), apiKey, apiSecret, command.displayCurrency(),
+        command.language(), command.theme(), userPreference.getCreatedAt(), LocalDateTime.now());
+
+    return repository.save(updatedUserPreference);
+  }
+
+  @Override
+  public UserPreference findByUserId(String userId) {
+    UserPreference userPreference = repository.findByUserId(userId);
+
+    if (userPreference == null) {
+      throw new UserPreferenceNotFoundException(userId);
     }
 
-    @Override
-    public UserPreference update(String userId, UpdateUserPreferenceCommand command) {
-        userQuery.findById(userId);
-        UserPreference userPreference = findByUserId(userId);
+    return userPreference;
+  }
 
-        UserPreference updatedUserPreference = new UserPreference(
-                userPreference.getId(),
-                userPreference.getUserId(),
+  @Override
+  public List<UserPreference> findAll() {
+    return repository.findAll();
+  }
 
-                command.displayCurrency(),
-                command.language(),
-                command.theme(),
-
-                userPreference.getCreatedAt(),
-                LocalDateTime.now());
-
-        return repository.save(updatedUserPreference);
+  private String validateAndNormalizeApiKey(String apiKey) {
+    if (apiKey == null || apiKey.isBlank()) {
+      return null;
     }
-
-    @Override
-    public UserPreference findByUserId(String userId) {
-        UserPreference userPreference = repository.findByUserId(userId);
-
-        if (userPreference == null) {
-            throw new UserPreferenceNotFoundException(userId);
-        }
-
-        return userPreference;
+    if (apiKey.length() > MAX_BINANCE_API_KEY_LENGTH) {
+      throw new InvalidBinanceApiKeyLengthException(MAX_BINANCE_API_KEY_LENGTH);
     }
-
-    @Override
-    public List<UserPreference> findAll() {
-        return repository.findAll();
-    }
+    return apiKey;
+  }
 }
